@@ -1,0 +1,128 @@
+---
+type: Paper
+title: "AgentScope: A Flexible yet Robust Multi-Agent Platform"
+description: Developer-centric multi-agent platform built on message exchange, with fault tolerance, multi-modal, tool, and RAG support, and an actor-based distributed mode.
+tags: [multi-agent, agent-framework, fault-tolerance, actor-model, tool-use, rag, ai899]
+collections: [ai899]
+authors: [Dawei Gao, Zitao Li, Xuchen Pan, Weirui Kuang, Zhijian Ma, Bingchen Qian, Fei Wei, Wenhao Zhang, Yuexiang Xie, Daoyuan Chen, Liuyi Yao, Hongyi Peng, Zeyu Zhang, Lin Zhu, Chen Cheng, Hongzhu Shi, Yaliang Li, Bolin Ding, Jingren Zhou]
+year: 2024
+doi: 10.48550/arXiv.2402.14034
+arxiv: "2402.14034"
+arxiv_version: 2402.14034v2
+code: https://github.com/modelscope/agentscope
+sources:
+  - id: gaoAgentScopeFlexibleRobust2024
+    resource: zotero://select/items/@gaoAgentScopeFlexibleRobust2024
+    title: "AgentScope: A Flexible yet Robust Multi-Agent Platform"
+---
+
+# AgentScope: A Flexible yet Robust Multi-Agent Platform
+
+Text source: arXiv HTML, version `2402.14034v2`.
+
+## Summary
+
+AgentScope is a developer-centric multi-agent platform from Alibaba Group that uses message exchange as its core communication mechanism.[^gaoAgentScopeFlexibleRobust2024] The paper names four challenges in multi-agent application development: programming complexity (specialized agents, SOP or dynamic workflows, one-to-one or broadcast communication), error propagation from LLM hallucination and unreliable tools, systematic support for multi-modal data, tools, and external knowledge, and the difficulty of distributed deployment.[^gaoAgentScopeFlexibleRobust2024]
+
+AgentScope answers these with syntactic utilities (pipelines, message hub), built-in agents and service functions, a zero-code drag-and-drop workstation, automatic prompt tuning, built-in and customizable fault tolerance, URL-based lazy loading of multi-modal data, a ReAct-based service toolkit, knowledge banks for RAG, and an actor-based distributed framework in which the local and distributed workflows are the same code.[^gaoAgentScopeFlexibleRobust2024]
+
+The paper is a system description. It contains no quantitative evaluation: no benchmark, latency, throughput, or accuracy numbers are reported.[^gaoAgentScopeFlexibleRobust2024]
+
+## Contributions
+
+- A procedure-oriented message exchange mechanism with syntactic features for multi-agent programming, a zero-code drag-and-drop programming workstation, and a set of automatic prompt tuning mechanisms.[^gaoAgentScopeFlexibleRobust2024]
+- Fault tolerance designs that let developers handle errors in their applications.[^gaoAgentScopeFlexibleRobust2024]
+- Multi-modal support that reduces the overhead of heterogeneous data generation and transmission, a service toolkit for tool usage, and knowledge processing modules for RAG.[^gaoAgentScopeFlexibleRobust2024]
+- An actor-based distributed mode for developing distributed multi-agent applications.[^gaoAgentScopeFlexibleRobust2024]
+
+## Method
+
+### Basic concepts
+
+| Concept | Definition |
+|---|---|
+| Message | A Python dictionary with two mandatory fields (`name`, `content`) and an optional field (`url`). Each message is identified by an auto-generated UUID and timestamp. |
+| Agent | Abstracted through two interfaces. `reply` takes a message and produces a response. `observe` processes incoming messages without generating a direct reply. |
+| Workflow | An ordered sequence of agent executions and message exchanges, analogous to computational graphs in TensorFlow but allowed to be non-DAG. |
+| Service function | A functional API that returns a formatted `ServiceResponse`. |
+| Tool | A processed service function with functionality descriptions and the necessary input parameters prepared (for example a preset API key). |
+
+All rows: [^gaoAgentScopeFlexibleRobust2024]
+
+### Architecture
+
+The architecture has three hierarchical layers and a set of user interaction interfaces.[^gaoAgentScopeFlexibleRobust2024]
+
+- **Utility layer.** Model API invocation and service functions such as code execution and database operations, with built-in autonomous retry mechanisms.[^gaoAgentScopeFlexibleRobust2024]
+- **Manager and wrapper layer.** Manages resources and API services, and offers customizable interfaces for fault tolerance controls.[^gaoAgentScopeFlexibleRobust2024]
+- **Agent layer.** The agent abstraction and the workflow-level programming interfaces.[^gaoAgentScopeFlexibleRobust2024]
+- **User interaction.** An annotated terminal, a Web UI, a Gradio-based interface (`as_studio application.py`), and the drag-and-drop workstation. These show agent communication, execution timing, and financial costs.[^gaoAgentScopeFlexibleRobust2024]
+
+### Usability features
+
+- **Pipelines.** Sequential, if-else, switch, while-loop, and for-loop pipelines, in functional and object-oriented styles.[^gaoAgentScopeFlexibleRobust2024]
+- **Message hub (`msghub`).** A broadcast mechanism: a message generated by one participant is automatically sent to the other participants. Agents can be added to and deleted from the hub at run time.[^gaoAgentScopeFlexibleRobust2024]
+- **Built-in agents (Table 1 of the paper).** UserAgent, DialogAgent, DictDialogAgent, ReActAgent, ProgrammerAgent, TextToImageAgent, RpcUserAgent, RpcDialogAgent.[^gaoAgentScopeFlexibleRobust2024]
+- **Monitoring.** A module tracks model and API usage and calculates financial costs. Developers can set budget limits and receive alerts.[^gaoAgentScopeFlexibleRobust2024]
+- **Workstation.** An application is a graph of workflow nodes: model, service (tool), agent, pipeline, message, and copy nodes. The `ASDiGraph` data structure either runs the JSON graph directly in topological order, or compiles it to a Python script.[^gaoAgentScopeFlexibleRobust2024]
+- **Automatic prompt tuning.** System prompts are generated from a short natural-language description (`auto_sys_prompt=True`). In-context learning is a switch (`enable_icl=True`) with demonstration matching by random selection, similar questions, or similar answers.[^gaoAgentScopeFlexibleRobust2024]
+
+### Fault tolerance
+
+| Error class | Example | Mechanism |
+|---|---|---|
+| Accessibility errors | Model API timeout, transient network outage | Basic auto-retry in API services and model wrappers, with a configurable maximum retry count |
+| Rule-resolvable errors | An LLM returns JSON with a missing right brace | Rule-based correction tools that complete unmatched braces and extract JSON data from strings, without another LLM call |
+| Model-resolvable errors | Argument errors, semantic errors, programming mistakes | Customizable fault handlers (`parse_func`, `fault_handler`, `max_retries`), and agent-level handling such as self-critique, pairwise critique, and human-augmented critique |
+| Unresolvable errors | An expired or unauthorized API key | A logging system with a `CHAT` level for agent conversations, formatted logs, and a WebUI |
+
+All rows: [^gaoAgentScopeFlexibleRobust2024]
+
+### Multi-modal data, tools, and RAG
+
+- **Multi-modal data.** Transmission is decoupled from storage. A message carries only a URL, and the data is loaded when needed, for example when rendered in the web UI or invoked by a model wrapper. A multi-modal model wrapper saves generated data locally through a file manager and returns a local URL.[^gaoAgentScopeFlexibleRobust2024]
+- **Tool usage.** The module is based on the [ReAct](../methods/react.md) algorithm and a *service toolkit*. It has four steps: function preparation, instruction preparation, iterative reasoning, and iterative acting. The default calling format is a JSON dictionary in a Markdown fenced code block with `thought`, `speak`, and `function` fields. Response parsing errors and function execution errors are returned to the LLM with detailed error information for correction in the next iteration. Other runtime errors are left to developers.[^gaoAgentScopeFlexibleRobust2024]
+- **RAG.** A single `.json` file groups all [RAG](../methods/retrieval-augmented-generation.md) configuration. *Knowledge banks* are collections of RAG objects, each with a unique `knowledge_id`, an index, and a retriever, so that agents share knowledge without recomputing indexes. An agent can load several RAG objects, update them, weight their retrieved results, and recompose queries. The design is compatible with LlamaIndex and LangChain.[^gaoAgentScopeFlexibleRobust2024]
+
+### Actor-based distributed framework
+
+- Each agent corresponds to an actor that computes only once all its required input messages are ready. This gives automatic parallel optimization without a static graph.[^gaoAgentScopeFlexibleRobust2024]
+- A *placeholder* message lets the main process continue without blocking while keeping the information needed to retrieve the real value later. When a placeholder is used in a control flow statement, AgentScope blocks temporarily to retrieve its actual value.[^gaoAgentScopeFlexibleRobust2024]
+- Local and distributed agents can be mixed. `to_dist()` converts an agent to its distributed version. There are two modes: single-machine multi-process and multi-machine multi-process.[^gaoAgentScopeFlexibleRobust2024]
+- An agent server on remote machines initializes the required agents on request. AgentScope Studio gathers and displays messages from all distributed agents and manages agent servers.[^gaoAgentScopeFlexibleRobust2024]
+
+## Experiments & Results
+
+The paper reports no experiments or measurements.[^gaoAgentScopeFlexibleRobust2024] It demonstrates the platform through example applications:
+
+| Application | What it shows |
+|---|---|
+| Basic conversation | UserAgent and DialogAgent, then the same flow with sequential and while-loop pipelines |
+| Group conversation with mentions | `msghub` plus `filter_agents` to call an agent by `@agent_name` |
+| Werewolf game | Six players (two werewolves, two villagers, a seer, a witch), intended to fit in one hundred lines of code |
+| Distributed deployed agents | Single-machine multi-process and multi-machine multi-process modes |
+| AgentScope Copilot | LlamaIndex-based RAG agents with a guide agent that routes queries |
+| Web search and retrieve agents | SearcherAgent and parallel AnswererAgent instances |
+| Natural language to SQL | A ReAct agent equipped with DAIL-SQL and the `query_sqlite` service function |
+| Workstation | The basic conversation built with no code |
+
+All rows: [^gaoAgentScopeFlexibleRobust2024]
+
+Supported model platforms and APIs include OpenAI chat/embedding/DALL-E, HuggingFace, ModelScope, and locally hosted models with FastChat, [vLLM](../methods/vllm.md), and Flask.[^gaoAgentScopeFlexibleRobust2024]
+
+## Limitations
+
+- No quantitative evaluation of usability, robustness, or distributed efficiency is given. The claims are supported by design description and code examples only.[^gaoAgentScopeFlexibleRobust2024]
+- The paper states that not all errors can be handled by the fault tolerance mechanisms. Unresolvable errors need human intervention.[^gaoAgentScopeFlexibleRobust2024]
+- Meta-prompting for automatic prompt optimization is named as a future direction and is not integrated.[^gaoAgentScopeFlexibleRobust2024]
+- Future work includes deeper integration of retrieval augmented generation and adaptive communication protocols.[^gaoAgentScopeFlexibleRobust2024]
+- The paper has no dedicated limitations section.
+
+## Related
+
+- Proposed system: [AgentScope](../methods/agentscope.md)
+- Methods it builds on: [ReAct](../methods/react.md), [Retrieval-augmented generation](../methods/retrieval-augmented-generation.md), [Actor model](../methods/actor-model.md)
+- Frameworks discussed as related work: [AutoGen](../methods/autogen.md), [LangChain](../methods/langchain.md), [MetaGPT](../methods/metagpt.md), [LlamaIndex](../methods/llamaindex.md)
+- Supported model backends: [vLLM](../methods/vllm.md)
+
+[^gaoAgentScopeFlexibleRobust2024]: Gao et al. 2024

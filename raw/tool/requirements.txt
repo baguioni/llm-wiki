@@ -1,0 +1,5 @@
+bibtexparser>=1.4,<2
+marker-pdf
+pymupdf4llm
+beautifulsoup4
+markdownify
