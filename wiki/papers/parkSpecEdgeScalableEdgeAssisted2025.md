@@ -13,6 +13,9 @@ sources:
   - id: parkSpecEdgeScalableEdgeAssisted2025
     resource: zotero://select/items/@parkSpecEdgeScalableEdgeAssisted2025
     title: "SpecEdge: Scalable Edge-Assisted Serving Framework for Interactive LLMs"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
 ---
 
 # SpecEdge: Scalable Edge-Assisted Serving Framework for Interactive LLMs
@@ -265,12 +268,18 @@ SpecEdge gives a speedup over autoregressive decoding on the A100 with each test
 - When complete draft alignment fails, the proactive work is discarded.[^parkSpecEdgeScalableEdgeAssisted2025]
 - Reported metrics exclude prefill. The paper argues time to first token is comparable to the baseline because prefill latency is max(server_time, edge_time), and reports no measurement of it.[^parkSpecEdgeScalableEdgeAssisted2025]
 
+# Contradictions
+
+The ablation above finds that proactive drafting reduces inter token latency (to 28 ms with Qwen3 14B/1.7B on RTX 4090 edges).[^parkSpecEdgeScalableEdgeAssisted2025] HyCo re-implements a SpecEdge-style tree (four Gemma 4 E2B passes, 32 nodes) on a Galaxy S26 Ultra NPU over LTE/5G and finds that proactive drafting raises server saving on Spec-Bench (20.6% to 23.9% against server-side MTP) but lowers delivery speed from 16.1 to 12.1 tokens/s.[^baeHyCoHybridDrafting2026] Hardware, network, models, metric, and implementation all differ. See [Does proactive drafting help when the drafter runs on a phone?](../questions/proactive-drafting-on-a-phone.md).
+
 ## Related
 
 - Methods: [Speculative decoding](../methods/speculative-decoding.md), [Tree-based speculation](../methods/tree-based-speculation.md), [SpecEdge](../methods/specedge.md), [Proactive edge drafting](../methods/proactive-edge-drafting.md), [Split computing](../methods/split-computing.md)
 - Systems built on or compared: [SpecExec](../methods/specexec.md), [Sequoia](../methods/sequoia.md)
 - Benchmarks: [SpecBench](../benchmarks/spec-bench.md), [MTBench](../datasets/mt-bench.md)
 - Datasets: [C4](../datasets/c4.md), [OAsst](../datasets/oasst.md), [WikiText-2](../datasets/wikitext-2.md)
+- Later work that builds on SpecEdge's server and uses a SpecEdge-style baseline on a phone: [HyCo](baeHyCoHybridDrafting2026.md)
 - Papers in this wiki cited by this paper: [SpecExec](svirschevskiSpecExecMassivelyParallel2024.md), [Sheared LLaMA](xiaShearedLLaMAAccelerating2024.md)
 
 [^parkSpecEdgeScalableEdgeAssisted2025]: Park et al. 2025
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026

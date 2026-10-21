@@ -10,6 +10,12 @@ sources:
   - id: samarinLKLossesDirect2026
     resource: zotero://select/items/@samarinLKLossesDirect2026
     title: "LK Losses: Direct Acceptance Rate Optimization for Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
+  - id: agarwalOnPolicyDistillationLanguage2024
+    resource: zotero://select/items/@agarwalOnPolicyDistillationLanguage2024
+    title: "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes"
 ---
 
 # DistillSpec
@@ -52,6 +58,9 @@ KD algorithms compared as the distillation step (Table 1 of the paper):[^zhouDis
   - Supervised KD on ground-truth data ranks lowest in all settings. f-Distill and GKD, which use only model-generated data, outperform the other variants. SeqKD performs poorly although it trains on target-generated data, which the paper takes as evidence that white-box supervision from the target's logits is vital for SD.[^zhouDistillSpecImprovingSpeculative2024]
 - [LK Losses](../papers/samarinLKLossesDirect2026.md) cites DistillSpec as prior work that goes beyond the standard KD framework. It describes DistillSpec as exploring reverse KL and total variation (TV) distance as KD objectives for already pretrained LMs used as external speculators, and as concluding that the choice of divergence depends highly on the task and data.[^samarinLKLossesDirect2026] It contrasts its own setting: native draft modules tightly integrated into the target model and trained from scratch, not separately pretrained external drafters.[^samarinLKLossesDirect2026]
 
+- [GKD](../papers/agarwalOnPolicyDistillationLanguage2024.md), the source of the on-policy [GKD](gkd.md) variant above, states that Zhou et al. apply GKD to improve the alignment between draft and target model for a better speculative decoding speedup.[^agarwalOnPolicyDistillationLanguage2024]
+- [AdaSPEC](../papers/huAdaSPECSelectiveKnowledge2025.md) uses DistillSpec with forward KL to train its reference model, and compares against DistillSpec as the state-of-the-art baseline. It runs DistillSpec for 3 epochs or a tuned number of epochs (at most 30), a shorter schedule than the DistillSpec paper.[^huAdaSPECSelectiveKnowledge2025] DistillSpec's acceptance rate ranges from 44.34% (Alpaca, Pythia-31M → 1.4B, 3 epochs) to 87.36% (MBPP, CodeGen-350M → Phi-2, 3 epochs), and [AdaSPEC](adaspec.md) is higher in every cell.[^huAdaSPECSelectiveKnowledge2025]
+
 ## Strengths & Limitations
 
 - Distilled drafts transfer to unseen tasks (the BigBenchHard result above).[^zhouDistillSpecImprovingSpeculative2024]
@@ -61,12 +70,16 @@ KD algorithms compared as the distillation step (Table 1 of the paper):[^zhouDis
 - The method assumes white-box access to both models.[^zhouDistillSpecImprovingSpeculative2024]
 - Gains on WMT are small: +0.05× to +0.12× in Table C.1.[^zhouDistillSpecImprovingSpeculative2024]
 - Latency is measured at batch size 1.[^zhouDistillSpecImprovingSpeculative2024]
+- AdaSPEC describes DistillSpec's TVD run (batch size 32, 300,000 steps) as computationally costly and prone to overfitting, and in its own short-schedule ablation finds TVD and reverse KL far below forward KL.[^huAdaSPECSelectiveKnowledge2025] See [Which divergence should a draft model be distilled with?](../questions/drafter-distillation-divergence.md).
 
 ## Related
 
-- [Knowledge distillation](../methods/knowledge-distillation.md)
+- [Knowledge distillation](../methods/knowledge-distillation.md), [GKD](gkd.md), [AdaSPEC](adaspec.md)
+- [Which divergence should a draft model be distilled with?](../questions/drafter-distillation-divergence.md)
 - [Speculative decoding](../methods/speculative-decoding.md)
 - Datasets: [XSum](../datasets/xsum.md), [CNN/DM](../datasets/cnn-dailymail.md), [GSM8K](../datasets/gsm8k.md)
 
 [^zhouDistillSpecImprovingSpeculative2024]: Zhou et al. 2024
 [^samarinLKLossesDirect2026]: Samarin et al. 2026
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025
+[^agarwalOnPolicyDistillationLanguage2024]: Agarwal et al. 2024

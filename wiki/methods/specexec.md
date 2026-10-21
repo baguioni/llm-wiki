@@ -88,6 +88,7 @@ All rows: [^svirschevskiSpecExecMassivelyParallel2024]
 
 - [Tree-based speculation](../methods/tree-based-speculation.md), [Sequoia](../methods/sequoia.md), [SpecInfer](../methods/specinfer.md), [Speculative decoding](../methods/speculative-decoding.md), [Sheared LLaMA](../methods/sheared-llama.md)
 - Papers: [SpecExec](../papers/svirschevskiSpecExecMassivelyParallel2024.md), [SpecEdge](../papers/parkSpecEdgeScalableEdgeAssisted2025.md)
+- [Quantization of the target and the draft in speculative decoding](../analyses/quantization-in-speculative-decoding.md) (4-bit GPTQ against 16-bit targets)
 
 [^svirschevskiSpecExecMassivelyParallel2024]: Svirschevski et al. 2024
 [^parkSpecEdgeScalableEdgeAssisted2025]: Park et al. 2025

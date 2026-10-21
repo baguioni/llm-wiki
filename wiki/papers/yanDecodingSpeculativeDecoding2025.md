@@ -212,4 +212,11 @@ All rows: [^yanDecodingSpeculativeDecoding2025]
 - Datasets: [MMLU](../datasets/mmlu.md), [Hellaswag](../datasets/hellaswag.md), [Chatbot Arena](../datasets/chatbot-arena.md), [CNN/DailyMail](../datasets/cnn-dailymail.md), [XSum](../datasets/xsum.md), [RedPajama](../datasets/redpajama.md)
 - Papers in this wiki cited by this paper: [Sheared LLaMA](xiaShearedLLaMAAccelerating2024.md), [Compact Language Models via Pruning and Knowledge Distillation](muralidharanCompactLanguageModels2024.md), [DistillSpec](zhouDistillSpecImprovingSpeculative2024.md)
 
+## Open questions and results
+
+- [Target-aware recovery of compressed drafters](../analyses/target-aware-recovery-of-compressed-drafters.md)
+- [Does recovering a pruned drafter against the target beat recovering it against its parent?](../questions/target-aware-recovery-of-pruned-drafters.md)
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025

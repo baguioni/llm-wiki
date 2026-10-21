@@ -10,6 +10,12 @@ sources:
   - id: liuWhenParallelDrafter2026
     resource: zotero://select/items/@liuWhenParallelDrafter2026
     title: When Parallel Drafter Meets Parallel Speculative Decoding
+  - id: drafter-evaluation
+    resource: raw/experiments/drafter-evaluation.md
+    title: "Drafter evaluation: six Q4_0 draft models for Qwen3-14B (phone drafts, spark verifies)"
+  - id: drafter-evaluation-server-only-chain
+    resource: raw/experiments/drafter-evaluation-server-only-chain.md
+    title: "Drafter evaluation, server-only chain7: all six drafters in PyTorch on the GB10 (no phone)"
 ---
 
 # DSpark
@@ -88,6 +94,28 @@ All rows: [^liuWhenParallelDrafter2026]
 - On a GB200 with Qwen3-8B at batch size 1, DSpark reaches 2.34× over autoregressive decoding, against 2.62× for DPara-single and 2.77× for DPara.[^liuWhenParallelDrafter2026]
 - Running DPara with the original DSpark checkpoint instead of M-DFlash lowers $\tau$ on Qwen3-8B: 4.07 against 5.82 on GSM8K, and 2.55 against 2.92 on Alpaca.[^liuWhenParallelDrafter2026]
 
+### My experiment: [Six phone drafters for a Qwen3-14B server verifier](../experiments/drafter-evaluation-qwen3-14b.md)
+
+Galaxy S25 NPU drafts with the Q4_0 GGUF of `deepseek-ai/dspark_qwen3_14b_block7` (1741 MB), with the Markov head (42 MB) on the host CPU. DGX Spark verifies Qwen3-14B-FP8, 60 Spec-Bench requests, temperature 0, 64 new tokens.[^drafter-evaluation]
+
+| Shape | tok/s | tok/round | draft ms | of which Markov head ms | verify ms |
+|---|---|---|---|---|---|
+| chain7 | 26.5 | 3.83 | 38.8 | 8.48 | 104.3 |
+| tree16 (depth 7, width 8) | 28.3 | 4.64 | 45.8 | 15.49 | 110.0 |
+| own-best (depth 7, width 8, budget 32) | 28.2 | 5.02 | 54.2 | 23.68 | 115.6 |
+
+All rows: [^drafter-evaluation]
+
+- DSpark has the highest acceptance of the six drafters in every shape and is the fastest chain drafter, but its Markov head costs as much as it gains, and the extra cost grows with the tree.[^drafter-evaluation]
+- The chain7 acceptance gain over DFlash is 3.83 against 3.45 tok/round.[^drafter-evaluation]
+
+### My experiment: [Six drafters on the server GPU, chain7, no phone](../experiments/server-only-chain-drafter-evaluation.md)
+
+The same checkpoint in PyTorch bf16, drafting as chain7 on the DGX Spark GPU beside the target, with the Markov bias added row by row on the GPU: 33.9 tok/s, 3.90 tok/round, 27.2 ms draft, against 26.5 tok/s on the phone.[^drafter-evaluation-server-only-chain]
+
+- The Markov chain costs 3.0 ms per round over DFlash's draft (27.2 against 24.2 ms), against 8.48 ms for the head on the phone's host CPU.[^drafter-evaluation-server-only-chain]
+- DSpark accepts the most of the six drafters (3.90 tok/round) and ties PARD-2 (34.0 tok/s) for the fastest chain.[^drafter-evaluation-server-only-chain]
+
 ## Strengths & Limitations
 
 - DSpark has the highest accepted length in every cell of the original paper's main table.[^chengDSparkConfidenceScheduledSpeculative2026]
@@ -96,6 +124,7 @@ All rows: [^liuWhenParallelDrafter2026]
 - The scheduler assumes that engine throughput depends predominantly on the verification batch size $B$, not on context length. Its early stop is globally optimal only if $\Theta$ is unimodal, while the real $\text{SPS}(B)$ curve is jagged and step-wise.[^chengDSparkConfidenceScheduledSpeculative2026]
 - The original paper reports offline accepted length with the scheduler disabled. The scheduler is evaluated in live production traffic.[^chengDSparkConfidenceScheduledSpeculative2026]
 - The draft phase remains serialized on the critical path of every round. DSpark's step stays 28%–30% longer than DPara's at every batch size.[^liuWhenParallelDrafter2026]
+- On a phone with the head on the host CPU, the sequential head is not cheap: 8.48 to 23.68 ms per round, growing with the tree.[^drafter-evaluation] On the server GPU it costs 3.0 ms as a chain.[^drafter-evaluation-server-only-chain] The original paper measures the cost of longer drafts only on a server, where draft lengths from 4 to 16 add 0.2% to 1.3% to round latency at batch size 128.[^chengDSparkConfidenceScheduledSpeculative2026]
 
 # Contradictions
 
@@ -116,6 +145,8 @@ The original paper reports no offline wall-clock speedup for DSpark, so the DPar
 
 ## Related
 
+- [Building a parallel drafter for on-device use without training it from scratch](../analyses/building-parallel-drafters-for-on-device-use.md)
+- [Can a pruned target be turned into a parallel drafter?](../questions/pruned-target-to-parallel-drafter.md)
 - Backbone and mechanism: [DFlash](../methods/dflash.md), [KV injection](../methods/kv-injection.md), [Speculative decoding](../methods/speculative-decoding.md)
 - Compared against: [EAGLE-3](../methods/eagle-3.md), [Multi-token prediction](../methods/multi-token-prediction.md), [Speculative speculative decoding](../methods/speculative-speculative-decoding.md), [PEARL](../methods/pearl.md)
 - Related training idea: [Training-time test](../methods/training-time-test.md)
@@ -125,6 +156,13 @@ The original paper reports no offline wall-clock speedup for DSpark, so the DPar
 
 - [Why do reported EAGLE-3 numbers differ so much between papers?](../questions/eagle-3-baseline-variance.md)
 - [DFlash, DSpark, and EAGLE-3: how they draft and what they report on Qwen3-8B](../analyses/dflash-dspark-eagle-3-drafting-comparison.md)
+- [Why parallel drafters beat EAGLE-3](../analyses/why-parallel-drafters-beat-eagle-3.md)
+- [What is the smallest block drafter that keeps acceptance with a sequential head?](../questions/minimum-drafter-depth-with-sequential-head.md)
+- [Choosing what to verify: Learning to Draft vs. DSpark](../analyses/choosing-what-to-verify-ltd-vs-dspark.md)
+- [Learned policy or calibrated confidence for choosing the verify set?](../questions/learned-vs-confidence-scheduled-verification.md)
+- [Block drafters reach 1.6–1.8× the throughput of autoregressive drafters on a phone NPU](../results/block-drafters-vs-ar-drafters-on-phone-npu.md)
 
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
 [^liuWhenParallelDrafter2026]: Liu et al. 2026
+[^drafter-evaluation]: My drafter evaluation report, runs of 2026-10-15/16
+[^drafter-evaluation-server-only-chain]: My server-only chain7 drafter evaluation report, runs of 2026-10-19

@@ -1,7 +1,7 @@
 ---
 type: Method
 title: Multi-Token Prediction (MTP)
-description: A module that ships with the target model (DeepSeek-V3, DeepSeek-V4, Qwen3.5 in the wiki's papers) and predicts tokens beyond the next one, reused as the drafter for speculative decoding.
+description: A module that ships with the target model (DeepSeek-V3, DeepSeek-V4, Qwen3.5, Gemma 4 in the wiki's papers) and predicts tokens beyond the next one, reused as the drafter for speculative decoding.
 tags: [speculative-decoding, draft-model, native-drafter, llm-inference, baseline]
 sources:
   - id: samarinLKLossesDirect2026
@@ -19,13 +19,16 @@ sources:
   - id: liSpecForgeFlexibleEfficient2026
     resource: zotero://select/items/@liSpecForgeFlexibleEfficient2026
     title: "SpecForge: A Flexible and Efficient Open-Source Training Framework for Speculative Decoding"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
 ---
 
 # Multi-Token Prediction (MTP)
 
 ## Overview
 
-Multi-token prediction modules are trained with the target model and can be repurposed for speculation after training.[^samarinLKLossesDirect2026] In the wiki's papers, MTP appears as the native drafter of DeepSeek-V3, of the DeepSeek-V4 production system, and of Qwen3.5 models, and it serves as a baseline for [speculative decoding](../methods/speculative-decoding.md) drafters.[^samarinLKLossesDirect2026][^chengDSparkConfidenceScheduledSpeculative2026][^chenDFlashBlockDiffusion2026] The wiki has no Paper page that proposes MTP. Everything here comes from papers that fine-tune it or compare against it.
+Multi-token prediction modules are trained with the target model and can be repurposed for speculation after training.[^samarinLKLossesDirect2026] In the wiki's papers, MTP appears as the native drafter of DeepSeek-V3, of the DeepSeek-V4 production system, and of Qwen3.5 models, and it serves as a baseline for [speculative decoding](../methods/speculative-decoding.md) drafters.[^samarinLKLossesDirect2026][^chengDSparkConfidenceScheduledSpeculative2026][^chenDFlashBlockDiffusion2026] HyCo runs the native MTP head of Gemma 4 26B-A4B on a phone NPU as a drafter for the server model.[^baeHyCoHybridDrafting2026] The wiki has no Paper page that proposes MTP. Everything here comes from papers that fine-tune it or compare against it.
 
 ## How it works
 
@@ -39,6 +42,8 @@ Multi-token prediction modules are trained with the target model and can be repu
 - **MTP-1** is the former production setup of DeepSeek-V4, a single-token setup whose verification budget is a static 2 tokens per request. DSpark compares against it and mentions static multi-token drafters MTP-3/5.[^chengDSparkConfidenceScheduledSpeculative2026]
 - **Fine-tuned MTP.** LK losses initializes from the original DeepSeek-V3 MTP weights and fine-tunes for 1 epoch, with KL or with its hybrid LK loss, keeping the original MoE architecture and the full vocabulary.[^samarinLKLossesDirect2026]
 - **Native MTP of Qwen3.5.** DFlash compares against "native MTP" for Qwen3.5-4B, Qwen3.5-9B, and Qwen3.5-35B-A3B. The paper does not describe the module.[^chenDFlashBlockDiffusion2026]
+- **Gemma 4 MTP head.** Released with Gemma 4 26B-A4B as google/gemma-4-26B-A4B-it-assistant, 420M parameters, in BF16. It reads the input embedding of the current token, the last hidden state, and the keys and values of two verifier layers (the last full-attention and the last sliding-window layer).[^baeHyCoHybridDrafting2026]
+- **On-device MTP Drafter (HyCo).** The Gemma 4 head with 4-bit QAT weights, an 86K-token output keep set, and a 1,024-token window, run on a phone NPU from state the server returns with each verification.[^baeHyCoHybridDrafting2026]
 - **Naming.** SpecForge uses "Multi-Token Prediction Heads" for the [Medusa](../methods/medusa.md) stage of draft model design, which is a different architecture from the DeepSeek module.[^liSpecForgeFlexibleEfficient2026]
 
 ## Papers using it
@@ -93,20 +98,40 @@ All rows: [^chenDFlashBlockDiffusion2026]
 
 In this table the native MTP has an acceptance length close to [DFlash](../methods/dflash.md) (for example 6.5 vs 7.1 on Math500 for Qwen3.5-4B) but about half the speedup (1.5× vs 3.0×).[^chenDFlashBlockDiffusion2026]
 
+### HyCo ([HyCo](../papers/baeHyCoHybridDrafting2026.md))
+
+Gemma 4 26B-A4B (AWQ 4-bit) on one RTX PRO 6000, sampling at temperature 1, top-$k$ 64, top-$p$ 0.95. *Cloud+MTP* is server-side MTP self-speculation with the released BF16 head over the full prefix and vocabulary, chain depth $K=4$, and exact verification. HyCo moves the head to a Galaxy S26 Ultra NPU and adds one SLM pass for alternative branches.[^baeHyCoHybridDrafting2026]
+
+| Configuration | SB-480 $g$ (ms/token) | SB-480 MAT | 32K $g$ (ms/token) | 32K MAT |
+|---|---|---|---|---|
+| Cloud+MTP | 7.81 | 3.05 | 23.91 | 2.37 |
+| HyCo server head (BF16 head on server, 86K vocab, 1K window, + one SLM pass, exact) | 6.67 | 3.79 | 23.00 | 2.70 |
+| HyCo exact (W4 head on phone, + one SLM pass) | 5.64 | 3.84 | 21.07 | 2.81 |
+| HyCo ($\epsilon=0.005$) | 4.80 | 4.71 | 16.92 | 3.73 |
+
+All rows: [^baeHyCoHybridDrafting2026]
+
+- After every verification pass, Cloud+MTP runs the head's $K$ sequential steps on the server. On UC-val, moving the head to the phone shortens the server's median round from 26.8 to 21.7 ms and lowers server GPU time per token by 15.2%, at about 20 ms more per round on the phone.[^baeHyCoHybridDrafting2026]
+- The chain's per-depth acceptance rate is 0.65–0.68 at every depth (geometric mean 0.66), and cumulative chain acceptance reaches 18.9% at depth 4.[^baeHyCoHybridDrafting2026]
+- 4-bit QAT of the head (100 steps, KL from the BF16 head) raises top-1 agreement with BF16 on UC-val from 87.4% to 91.0%. 8-bit weights retain 98.8% without training.[^baeHyCoHybridDrafting2026]
+- In a paired 150-question Spec-Bench experiment, the device-head configuration (W4, 86K keep set, 1K window) has 4.0% lower MAT than the original BF16 server head (95% CI 3.0–4.9%).[^baeHyCoHybridDrafting2026]
+- The head's server-side CUDA graphs agree with eager execution on 99.2–99.6% of tokens.[^baeHyCoHybridDrafting2026]
+
 ## Strengths & Limitations
 
 - Strength: the module ships with the target model, so no separate draft has to be trained before first use. LK losses evaluates the released DeepSeek-V3 module as is.[^samarinLKLossesDirect2026]
 - Limitation: the released DeepSeek-V3 module was not trained primarily for predicting multiple tokens ahead. Fine-tuning it with KL raises the mean $\tau$ from 3.20 to 4.79 at $T=0$.[^samarinLKLossesDirect2026]
 - Limitation: a static multi-token setup degrades aggregate throughput under high concurrency, which is why production used the single-token MTP-1.[^chengDSparkConfidenceScheduledSpeculative2026]
+- Strength: the head reads only a small slice of the LLM's state, so it can run on a phone if the server returns that state (5.6 KB per round plus 6.1 KB per output token at 8 bits in HyCo).[^baeHyCoHybridDrafting2026]
 - Limitation: on Qwen3.5 the native MTP's speedup is 1.2× to 1.7× at concurrency 8, below DFlash's 1.7× to 3.5× on the same models.[^chenDFlashBlockDiffusion2026]
 
-Caveat on the numbers: the three papers measure different modules (DeepSeek-V3, DeepSeek-V4 production, Qwen3.5) with different metrics, so no two of their numbers describe the same setting.
+Caveat on the numbers: the papers measure different modules (DeepSeek-V3, DeepSeek-V4 production, Qwen3.5, Gemma 4) with different metrics, so no two of their numbers describe the same setting.
 
 ## Related
 
 - Parent concept: [Speculative decoding](../methods/speculative-decoding.md)
 - Related drafters: [EAGLE](../methods/eagle.md), [EAGLE-3](../methods/eagle-3.md), [Medusa](../methods/medusa.md)
-- Methods compared against it: [DSpark](../methods/dspark.md), [DFlash](../methods/dflash.md)
+- Methods compared against it: [DSpark](../methods/dspark.md), [DFlash](../methods/dflash.md), [HyCo](../methods/hyco.md) (runs it on the phone)
 - Serving engines: [SGLang](../methods/sglang.md), [vLLM](../methods/vllm.md)
 - Datasets: [MT-Bench](../datasets/mt-bench.md), [HumanEval](../datasets/humaneval.md), [GSM8K](../datasets/gsm8k.md), [MATH-500](../datasets/math-500.md)
 
@@ -115,3 +140,4 @@ Caveat on the numbers: the three papers measure different modules (DeepSeek-V3, 
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^liEAGLE3ScalingInference2025]: Li et al. 2025
 [^liSpecForgeFlexibleEfficient2026]: Li et al. 2026
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026

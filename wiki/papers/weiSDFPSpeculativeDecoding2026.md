@@ -126,4 +126,9 @@ All rows: [^weiSDFPSpeculativeDecoding2026]
 - Datasets: [CNN/Daily Mail](../datasets/cnn-dailymail.md), [GSM8K](../datasets/gsm8k.md), [TinyStories](../datasets/tinystories.md), [WikiText2](../datasets/wikitext-2.md)
 - Papers in this wiki cited by this paper: [DistillSpec](zhouDistillSpecImprovingSpeculative2024.md)
 
+## Open questions and results
+
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^weiSDFPSpeculativeDecoding2026]: Wei et al. 2026

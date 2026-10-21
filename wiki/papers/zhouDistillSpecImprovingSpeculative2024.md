@@ -193,6 +193,14 @@ All rows: [^zhouDistillSpecImprovingSpeculative2024]
 - Methods proposed: [DistillSpec](../methods/distillspec.md)
 - Methods built on: [Speculative decoding](../methods/speculative-decoding.md), [Knowledge distillation](../methods/knowledge-distillation.md), [Lossy speculative decoding](../methods/lossy-speculative-decoding.md)
 - Distillation methods compared: [GKD](../methods/gkd.md), [f-Distill](../methods/f-distill.md), [SeqKD](../methods/seqkd.md)
+- Related papers: [AdaSPEC](huAdaSPECSelectiveKnowledge2025.md), [GKD](agarwalOnPolicyDistillationLanguage2024.md)
 - Datasets: [XSum](../datasets/xsum.md), [CNN/DM](../datasets/cnn-dailymail.md), [WMT EnDe](../datasets/wmt14-en-de.md), [GSM8K](../datasets/gsm8k.md), [LM1B](../datasets/lm1b.md), [BIG-Bench Hard](../datasets/bbh.md)
+
+## Open questions and results
+
+- [Training budgets for pruning recovery and drafter distillation](../analyses/recovery-and-distillation-training-budgets.md)
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+- [Which divergence should a draft model be distilled with?](../questions/drafter-distillation-divergence.md)
 
 [^zhouDistillSpecImprovingSpeculative2024]: Zhou et al. 2024

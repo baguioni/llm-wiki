@@ -31,6 +31,12 @@ sources:
   - id: xiaShearedLLaMAAccelerating2024
     resource: zotero://select/items/@xiaShearedLLaMAAccelerating2024
     title: "Sheared LLaMA: Accelerating Language Model Pre-Training via Structured Pruning"
+  - id: xieNovelHatShapedDeviceCloud2025
+    resource: zotero://select/items/@xieNovelHatShapedDeviceCloud2025
+    title: A Novel Hat-Shaped Device-Cloud Collaborative Inference Framework for Large Language Models
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # ShareGPT
@@ -69,6 +75,8 @@ Only what the papers state. They sample or filter the dataset differently, so th
 | [DFlash](../papers/chenDFlashBlockDiffusion2026.md) | Training data for a DFlash drafter, with UltraChat, to match EAGLE-3's training data | LLaMA-3.1-8B-Instruct on SGLang | DFlash (10) reaches 2.4× on GSM8K, 2.8× on HumanEval, and 2.2× on Alpaca at concurrency 1[^chenDFlashBlockDiffusion2026] |
 | [SpecForge](../papers/liSpecForgeFlexibleEfficient2026.md) | Training data for a reproduced EAGLE-3 draft, with UltraChat, as the baseline against Perfect-Blend | LLaMA-3.1-Instruct | Acceptance length 2.82 on Math500, against 3.48 when trained on Perfect-Blend[^liSpecForgeFlexibleEfficient2026] |
 | [Sheared-LLaMA](../papers/xiaShearedLLaMAAccelerating2024.md) | Instruction tuning: 10,000 instruction-response pairs for fine-tuning and another 1,000 instructions for evaluation, first round of each chat only | Sheared-LLaMA and baselines, GPT-4 as the evaluator | Win rates are given only in a figure[^xiaShearedLLaMAAccelerating2024] |
+| [HAT](../papers/xieNovelHatShapedDeviceCloud2025.md) | Training data for HAT's adapter and for the U-Medusa heads | Vicuna-7B and 13B | No number is reported on the dataset itself[^xieNovelHatShapedDeviceCloud2025] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Training data for [EAGLE](../methods/eagle.md) with [AdaSPEC](../methods/adaspec.md) token selection | Vicuna-7B-v1.3, 3 epochs, EAGLE recipe | Training first-token accuracy 75.3% → 76.3%[^huAdaSPECSelectiveKnowledge2025] |
 
 ## Known issues
 
@@ -88,6 +96,8 @@ EAGLE-3 states that its ShareGPT and UltraChat-200K training data contain approx
 - Serving systems evaluated on it: [vLLM](../methods/vllm.md), [SGLang](../methods/sglang.md), [Radix attention](../methods/radix-attention.md), [KV cache](../methods/kv-cache.md), [KV cache swapping](../methods/kv-cache-swapping.md), [Program-aware scheduling](../methods/program-aware-scheduling.md), [Continuous batching](../methods/continuous-batching.md)
 - Datasets: [Open-PerfectBlend](perfectblend.md), [MT-Bench](mt-bench.md), [MATH-500](math-500.md), [HotpotQA](hotpotqa.md), [ALFWorld](alfworld.md)
 - Benchmarks used alongside it as workloads: [BFCL](../benchmarks/bfcl.md)
+- [How large are the standard drafter training sets?](../questions/drafter-training-set-sizes.md)
+- [Drafter training data across papers](../analyses/drafter-training-data-across-papers.md)
 
 [^agarwalSYMPHONYImprovingMemory2024]: Agarwal et al. 2024
 [^abhyankarInferCeptEfficientIntercept2024]: Abhyankar et al. 2024
@@ -98,3 +108,5 @@ EAGLE-3 states that its ShareGPT and UltraChat-200K training data contain approx
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^liSpecForgeFlexibleEfficient2026]: Li et al. 2026
 [^xiaShearedLLaMAAccelerating2024]: Xia et al. 2024
+[^xieNovelHatShapedDeviceCloud2025]: Xie et al. 2025
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

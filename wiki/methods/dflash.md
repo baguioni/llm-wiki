@@ -13,6 +13,21 @@ sources:
   - id: liuWhenParallelDrafter2026
     resource: zotero://select/items/@liuWhenParallelDrafter2026
     title: When Parallel Drafter Meets Parallel Speculative Decoding
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: drafter-evaluation
+    resource: raw/experiments/drafter-evaluation.md
+    title: "Drafter evaluation: six Q4_0 draft models for Qwen3-14B (phone drafts, spark verifies)"
+  - id: drafter-evaluation-server-only-chain
+    resource: raw/experiments/drafter-evaluation-server-only-chain.md
+    title: "Drafter evaluation, server-only chain7: all six drafters in PyTorch on the GB10 (no phone)"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
 ---
 
 # DFlash
@@ -100,6 +115,56 @@ All rows: [^liuWhenParallelDrafter2026]
 - The sampling rows use temperature 1.0 for both the target and the drafter, top-$p$ 1.0, and 80 requests per benchmark.[^liuWhenParallelDrafter2026]
 - Latency breakdown on Qwen3-14B, GSM8K, batch size 1: the serial draft stage of DFlash takes 4.1 ms, 24% of a 17.3 ms step.[^liuWhenParallelDrafter2026]
 
+### PARD-2 paper ([An et al. 2026](../papers/anPARD2TargetAlignedParallel2026.md))
+
+Setting: official DFlash weights, inference draft length 16, [vLLM](../methods/vllm.md), NVIDIA A100-40GB, temperature 0, tree decoding disabled, thinking mode disabled. Each cell is speedup over autoregressive decoding / $\tau$. DFlash is reported only for Qwen3-8B.[^anPARD2TargetAlignedParallel2026]
+
+| Model | HumanEval | GSM8K | Math-500 | MT-Bench | Avg. |
+|---|---|---|---|---|---|
+| Qwen3-8B | 5.66 / 6.94 | 4.64 / 5.39 | 5.59 / 6.88 | 2.57 / 3.10 | 4.61 / 5.58 |
+
+All rows: [^anPARD2TargetAlignedParallel2026]
+
+- In the same table PARD-2 averages 5.81 / 6.98 and PARD 4.39 / 5.56.[^anPARD2TargetAlignedParallel2026]
+- PARD-2 contrasts its confidence-adaptive loss weights with DFlash's fixed, position-dependent decaying weights, and describes DFlash as requiring grafted layers.[^anPARD2TargetAlignedParallel2026]
+
+### Osprey paper ([Bie et al. 2026](../papers/bieOspreyTargetagnosticPretraining2026.md)): warm start (Appendix G)
+
+Setting: Qwen3-8B target, DFlash drafter trained for six epochs on 65k math prompts, block size 16, evaluated in SGLang on five domains with 512 prompts each. The warm start initializes the body from a diffusion LM ([IDLM](i-dlm.md)) on a four-layer LayerSkip-Llama backbone. Cells are mean accepted length.[^bieOspreyTargetagnosticPretraining2026]
+
+| Eval domain | Original DFlash, random body | Original DFlash, IDLM warm start | EAGLE-style DFlash, IDLM warm start |
+|---|---|---|---|
+| math (in-domain) | 5.96 | 6.03 | 5.25 |
+| OOD average | 1.64 | 1.68 | 2.00 |
+
+All rows: [^bieOspreyTargetagnosticPretraining2026]
+
+- Under the original interface the warm start gains at most $0.07$ accepted tokens in any domain. The authors' hypothesis is key/value distribution drift: with [KV injection](../methods/kv-injection.md), the pretrained body's attention receives target-derived key/value streams it never saw in pretraining.[^bieOspreyTargetagnosticPretraining2026]
+- The EAGLE-style variant adds zero-initialized target-side projections to $Q$, $K$, and $V$ and uses causal intra-block attention with shift-by-one labels.[^bieOspreyTargetagnosticPretraining2026]
+
+### HyCo paper ([Bae et al. 2026](../papers/baeHyCoHybridDrafting2026.md)): server-side head for a cross-family verifier (Appendix H)
+
+In additional runs for Muse-Glimmer-30B (NVFP4), Glimmer's own DFlash2 head (2.8B parameters), which reads five of the verifier's layers, drafted eight-token chains on the server, and HyCo's Gemma 4 E2B SLM Drafter on a Galaxy Z Fold8 added branches through a token bridge without retraining. Over all 480 Spec-Bench questions, a 32-node tree of the chain and a single SLM pass reached MAT 4.07, against 3.16 for a SpecEdge-style tree of four SLM passes and 127 nodes. HyCo notes that heads reading more verifier layers, such as DFlash, can need a larger hand-off if moved to the device, and leaves a device-runnable head for such families to future work.[^baeHyCoHybridDrafting2026]
+
+### My experiment: [Six phone drafters for a Qwen3-14B server verifier](../experiments/drafter-evaluation-qwen3-14b.md)
+
+Galaxy S25 NPU drafts with the Q4_0 GGUF of `deepseek-ai/dflash_qwen3_14b_block7` (1741 MB), DGX Spark verifies Qwen3-14B-FP8, 60 Spec-Bench requests, temperature 0, 64 new tokens.[^drafter-evaluation]
+
+| Shape | tok/s | tok/round | draft ms | verify ms |
+|---|---|---|---|---|
+| chain7 | 25.5 | 3.45 | 30.4 | 105.1 |
+| tree16 (depth 7, width 8) | 27.9 | 4.15 | 30.6 | 110.8 |
+| own-best (depth 7, width 8, budget 32) | 28.8 | 4.37 | 30.6 | 115.3 |
+
+All rows: [^drafter-evaluation]
+
+- Draft time stays flat at 30.4–30.6 ms across the three shapes.[^drafter-evaluation]
+- DFlash is within 2 tok/s of PARD-2 and DSpark in every shape. It downloads 10 KB per generated token of target features after round 0, and 2.8 MB of prompt features per request in round 0.[^drafter-evaluation]
+
+### My experiment: [Six drafters on the server GPU, chain7, no phone](../experiments/server-only-chain-drafter-evaluation.md)
+
+The same checkpoint in PyTorch bf16 (eager, SDPA), drafting as chain7 on the DGX Spark GPU beside the target: 31.0 tok/s, 3.43 tok/round, 24.2 ms draft, against 25.5 tok/s on the phone. It is the smallest server-over-phone gain of the six drafters (1.22×).[^drafter-evaluation-server-only-chain]
+
 ## Strengths & Limitations
 
 - Drafting cost is one parallel pass, so a five-layer DFlash drafter generating 16 tokens has lower latency and higher acceptance length than EAGLE-3 generating 8 tokens.[^chenDFlashBlockDiffusion2026]
@@ -133,26 +198,40 @@ Setting differences: Cheng et al. retrain DFlash themselves and call the length 
 | temperature 1, block size 16 ($\tau$ only) | Chen et al. | 5.98 | 6.40 | 5.52 | 5.21 | 3.80 |
 | temperature 1.0, block size 7 ($\tau$ only) | Cheng et al. | 5.33 | 4.91 | 4.64 | 4.36 | 3.11 |
 | temperature 1.0, draft length 7 ($\tau$ only) | Liu et al. | 5.28 | 5.15 | 4.64 | 4.47 | 3.18 |
+| greedy, draft length 16, vLLM, A100-40GB | An et al. (PARD-2) | 4.64 / 5.39 | 5.59 / 6.88 | 5.66 / 6.94 | not measured | 2.57 / 3.10 |
 
-Rows "Chen et al.": [^chenDFlashBlockDiffusion2026] Rows "Cheng et al.": [^chengDSparkConfidenceScheduledSpeculative2026] Rows "Liu et al.": [^liuWhenParallelDrafter2026]
+Rows "Chen et al.": [^chenDFlashBlockDiffusion2026] Rows "Cheng et al.": [^chengDSparkConfidenceScheduledSpeculative2026] Rows "Liu et al.": [^liuWhenParallelDrafter2026] Row "An et al.": [^anPARD2TargetAlignedParallel2026]
 
-These rows are not a like-for-like conflict, because block size, checkpoint, generation length, and hardware all differ. They show that the headline speedups of the original paper are not reproduced at draft length 7.
+These rows are not a like-for-like conflict, because block size, checkpoint, generation length, and hardware all differ. They show that the headline speedups of the original paper are not reproduced at draft length 7. At draft length 16 on vLLM, PARD-2's measurement is lower than the original on GSM8K, MATH-500, and MT-Bench, but higher on HumanEval (5.66 / 6.94 against 5.14 / 6.50). The MT-Bench $\tau$ differs most (3.10 against 4.24).
 
 **3. The margin over EAGLE-3.** The original paper reports that DFlash consistently outperforms EAGLE-3, with EAGLE-3 acceptance lengths near 3 on Qwen3 (for example Qwen3-8B GSM8K at temperature 1: EAGLE-3 (16) 3.12, EAGLE-3 (60) 3.59, DFlash 5.98).[^chenDFlashBlockDiffusion2026] In the DSpark paper, with all drafters retrained on the same data, the Eagle3 TTT horizon (7) aligned with the block size (7), and chain-based drafting, Eagle3 reaches 5.30 against 5.33 for DFlash on Qwen3-8B GSM8K, and on Gemma4-12B Eagle3 is above DFlash in every column.[^chengDSparkConfidenceScheduledSpeculative2026] The DPara paper's EAGLE3 rows are close to the original paper's (Qwen3-8B, greedy: average 1.44× / 2.87).[^liuWhenParallelDrafter2026] Setting differences: the original paper uses EAGLE-3 checkpoints released by AngelSlim with 7 draft steps, top-$k$ 10, and draft trees of 16 or 60 tokens, while the DSpark paper retrains a 1-layer Eagle3 and uses a chain.[^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026]
 
 ## Related
 
+- [Building a parallel drafter for on-device use without training it from scratch](../analyses/building-parallel-drafters-for-on-device-use.md)
+- [Can a pruned target be turned into a parallel drafter?](../questions/pruned-target-to-parallel-drafter.md)
 - Mechanism: [KV injection](../methods/kv-injection.md), [KV cache](../methods/kv-cache.md), [Speculative decoding](../methods/speculative-decoding.md)
 - Built on DFlash: [DSpark](../methods/dspark.md)
+- Other parallel drafters: [PARD](../methods/pard.md)
+- Warm-start study: [Osprey](../methods/osprey.md)
 - Compared against: [EAGLE-3](../methods/eagle-3.md), [Multi-token prediction](../methods/multi-token-prediction.md), [Speculative speculative decoding](../methods/speculative-speculative-decoding.md), [PEARL](../methods/pearl.md)
 - Serving engines: [SGLang](../methods/sglang.md), [vLLM](../methods/vllm.md)
-- Papers: [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [DSpark](../papers/chengDSparkConfidenceScheduledSpeculative2026.md), [DPara](../papers/liuWhenParallelDrafter2026.md)
+- Papers: [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [DSpark](../papers/chengDSparkConfidenceScheduledSpeculative2026.md), [DPara](../papers/liuWhenParallelDrafter2026.md), [PARD-2](../papers/anPARD2TargetAlignedParallel2026.md), [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md)
 
 ## Open questions and results
 
 - [Why do reported EAGLE-3 numbers differ so much between papers?](../questions/eagle-3-baseline-variance.md)
 - [DFlash, DSpark, and EAGLE-3: how they draft and what they report on Qwen3-8B](../analyses/dflash-dspark-eagle-3-drafting-comparison.md)
+- [Why parallel drafters beat EAGLE-3](../analyses/why-parallel-drafters-beat-eagle-3.md)
+- [DFlash research directions for mobile SpecEdge](../analyses/dflash-research-directions-for-mobile-specedge.md), [On-device draft cost on the Galaxy S25 Hexagon NPU](../experiments/npu-draft-cost-profiling-galaxy-s25.md)
+- [Can a block drafter be narrower than its target?](../questions/narrow-block-drafter.md)
+- [Block drafters reach 1.6–1.8× the throughput of autoregressive drafters on a phone NPU](../results/block-drafters-vs-ar-drafters-on-phone-npu.md)
 
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
 [^liuWhenParallelDrafter2026]: Liu et al. 2026
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^drafter-evaluation]: My drafter evaluation report, runs of 2026-10-15/16
+[^drafter-evaluation-server-only-chain]: My server-only chain7 drafter evaluation report, runs of 2026-10-19
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026

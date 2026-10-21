@@ -13,6 +13,12 @@ sources:
   - id: yanDecodingSpeculativeDecoding2025
     resource: zotero://select/items/@yanDecodingSpeculativeDecoding2025
     title: Decoding Speculative Decoding
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: minitron-pard-qwen3-14b
+    resource: raw/experiments/minitron-pard-qwen3-14b.md
+    title: "Minitron one-shot pruning of Qwen3-14B to the Qwen3-0.6B shape, chat-KD recovery, then PARD-1"
 ---
 
 # Structured Pruning
@@ -64,6 +70,11 @@ Two steps recur across the papers: decide what to remove, then retrain.
   - The 5-layer NoFT-Wide-796M achieves $97.7\%$ to $111.8\%$ higher throughput than Sheared-LLaMA-1.3B with temperature sampling.[^yanDecodingSpeculativeDecoding2025]
   - Below 5 layers the draft's alignment capability drops dramatically.[^yanDecodingSpeculativeDecoding2025]
   - For LLaMa-3, pruning layers had a larger impact on TAR, and the pruned Wide-829M draft is distilled over 1 million tokens to recover it.[^yanDecodingSpeculativeDecoding2025]
+- [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md) prunes a pretrained small LM by depth to build a drafter body: Qwen3-4B keeps 2 of its blocks and LayerSkip-Llama3.2-1B keeps 4, with the embedding, LM head, and final norm. The pruned model is then pretrained on FineWeb before per-target adaptation.[^bieOspreyTargetagnosticPretraining2026]
+- My experiment [Pruning Qwen3-14B into a PARD-1 drafter](../experiments/minitron-pard-qwen3-14b.md) prunes Qwen3-14B in one Minitron step, by depth and width together, to the Qwen3-0.6B shape (28 of 40 layers, hidden 1024 of 5120, 16 of 40 query heads, FFN 3,072 of 17,408), keeping 5.1% of the parameters.[^minitron-pard-qwen3-14b]
+  - Depth importance is the LM-loss increase when a layer is replaced by the identity. Layer 0 dominates (9.37 nats), then layer 6 (0.97) and layer 39 (0.54); the 12 dropped layers cost 0.022–0.033 nats each.[^minitron-pard-qwen3-14b]
+  - Zero-shot, the pruned model's SlimPajama validation loss is 9.60 nats/token against 1.907 for Qwen3-14B, and as a draft it has top-1 0.038 and MAT 1.04 on Spec-Bench. After forward-KL recovery on 57M tokens of the target's answers it reaches top-1 0.572 and MAT 2.17 at γ=5.[^minitron-pard-qwen3-14b]
+  - The pruning step took 64 min on a DGX Spark GB10.[^minitron-pard-qwen3-14b]
 
 ## Strengths & Limitations
 
@@ -79,6 +90,11 @@ Two steps recur across the papers: decide what to remove, then retrain.
 
 ## Related
 
+- [Target-aware recovery of compressed drafters](../analyses/target-aware-recovery-of-compressed-drafters.md)
+- [Does recovering a pruned drafter against the target beat recovering it against its parent?](../questions/target-aware-recovery-of-pruned-drafters.md)
+- [Does choosing what to prune by target agreement beat LM-loss importance?](../questions/target-agreement-pruning-criteria.md)
+- [Building a parallel drafter for on-device use without training it from scratch](../analyses/building-parallel-drafters-for-on-device-use.md)
+- [Can a pruned target be turned into a parallel drafter?](../questions/pruned-target-to-parallel-drafter.md), [Pruning Qwen3-14B into a PARD-1 drafter](../experiments/minitron-pard-qwen3-14b.md)
 - [Sheared-LLaMA](../methods/sheared-llama.md), [LLM-Pruner](../methods/llm-pruner.md)
 - [Knowledge distillation](../methods/knowledge-distillation.md)
 - [Speculative decoding](../methods/speculative-decoding.md)
@@ -87,3 +103,5 @@ Two steps recur across the papers: decide what to remove, then retrain.
 [^xiaShearedLLaMAAccelerating2024]: Xia et al. 2024
 [^muralidharanCompactLanguageModels2024]: Muralidharan et al. 2024
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^minitron-pard-qwen3-14b]: My Minitron pruning, chat-KD recovery, and PARD-1 report, runs of 2026-10-17/19

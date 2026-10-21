@@ -49,13 +49,37 @@ sources:
   - id: zhouDistillSpecImprovingSpeculative2024
     resource: zotero://select/items/@zhouDistillSpecImprovingSpeculative2024
     title: "DistillSpec: Improving Speculative Decoding via Knowledge Distillation"
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
+  - id: agarwalOnPolicyDistillationLanguage2024
+    resource: zotero://select/items/@agarwalOnPolicyDistillationLanguage2024
+    title: "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # GSM8K
 
 ## Overview
 
-GSM8K contains multi-step grade-school math word problems.[^wangWhenRLMeets2026] The papers in this wiki use it in two different ways. Most use its prompts as the mathematical-reasoning workload for measuring [speculative decoding](../methods/speculative-decoding.md) speedup and acceptance length.[^liEAGLE3ScalingInference2025][^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026][^liSpecForgeFlexibleEfficient2026][^samarinLKLossesDirect2026][^zhangLearningDraftAdaptive2026][^kumarSpeculativeSpeculativeDecoding2026][^weiSDFPSpeculativeDecoding2026] A smaller group reports task accuracy on it.[^wangAgentDropoutDynamicAgent2025][^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangEfficientOnDeviceDiffusion2026][^zhouDistillSpecImprovingSpeculative2024]
+GSM8K contains multi-step grade-school math word problems.[^wangWhenRLMeets2026] The papers in this wiki use it in two different ways. Most use its prompts as the mathematical-reasoning workload for measuring [speculative decoding](../methods/speculative-decoding.md) speedup and acceptance length.[^liEAGLE3ScalingInference2025][^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026][^liSpecForgeFlexibleEfficient2026][^samarinLKLossesDirect2026][^zhangLearningDraftAdaptive2026][^kumarSpeculativeSpeculativeDecoding2026][^weiSDFPSpeculativeDecoding2026] A smaller group reports task accuracy on it.[^wangAgentDropoutDynamicAgent2025][^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangEfficientOnDeviceDiffusion2026][^zhouDistillSpecImprovingSpeculative2024][^agarwalOnPolicyDistillationLanguage2024][^elhoushiLayerSkipEnablingEarly2024][^yuIntrospectiveDiffusionLanguage2026] AdaSPEC uses it as a task for distilling draft models and measuring acceptance rate.[^huAdaSPECSelectiveKnowledge2025]
 
 ## Composition
 
@@ -82,6 +106,14 @@ GSM8K contains multi-step grade-school math word problems.[^wangWhenRLMeets2026]
 | [AgentDropout](../papers/wangAgentDropoutDynamicAgent2025.md) | Mathematical-reasoning accuracy of multi-agent systems | Llama3-8B-Instruct, Qwen2.5-72B-Instruct, Deepseek-V3-671B-Instruct; temperature 1 | AgentDropout: 73.13, 93.75, 95.63[^wangAgentDropoutDynamicAgent2025] |
 | [Minitron](../papers/muralidharanCompactLanguageModels2024.md) | 5-shot accuracy of pruned and baseline models | Minitron 8B and 4B and baselines | Minitron 8B 51.3, Minitron 4B 24.1[^muralidharanCompactLanguageModels2024] |
 | [Sheared-LLaMA](../papers/xiaShearedLLaMAAccelerating2024.md) | 8-shot exact match | Sheared-LLaMA-2.7B and 3B-class baselines | Sheared-LLaMA-2.7B: 2.7 (Source), 2.4 (Scaling)[^xiaShearedLLaMAAccelerating2024] |
+| [PARD](../papers/anPARDAcceleratingLLM2025.md) | Math task for tokens/s and speedup | LLaMA3, Qwen2, Qwen2.5, DeepSeek-R1-Qwen targets; vLLM, A100-40GB | PARD on LLaMA3.1-8B: 235.09 tokens/s, 3.20[^anPARDAcceleratingLLM2025] |
+| [PARD-2](../papers/anPARD2TargetAlignedParallel2026.md) | Math task for speedup and $\tau$, and ablations | Qwen3-8B, 14B, 32B, Llama3.1-8B; vLLM, temperature 0 | PARD-2 on Qwen3-8B: 6.44, $\tau$ 7.68[^anPARD2TargetAlignedParallel2026] |
+| [Lever](../papers/wangLeverSpeculativeLLM2026a.md) | Decoding workload, 50 samples, up to 128 output tokens | Four targets on three Snapdragon phones, greedy | Lever on Qwen3-8B, OnePlus 12: 1.74 tokens/s[^wangLeverSpeculativeLLM2026a] |
+| [HyCo](../papers/baeHyCoHybridDrafting2026.md) | Math task inside Spec-Bench; numeric-answer accuracy as a quality check on lossy acceptance | Gemma 4 26B-A4B, temperature 1, first HyCo generation | GSM8K accuracy 95.0% for HyCo and 95.0% for server-side MTP[^baeHyCoHybridDrafting2026] |
+| [Agarwal et al. 2024](../papers/agarwalOnPolicyDistillationLanguage2024.md) | 4-shot CoT distillation with [GKD](../methods/gkd.md); accuracy on the test split | FLAN-T5 models fine-tuned on about 5.3K PaLM-540B CoTs; FLAN T5-XL teacher | Teacher 27.9; T5-small 4.585 and T5-base 20.5 before distillation; on-policy GKD beats baseline KD at every student size[^agarwalOnPolicyDistillationLanguage2024] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | Early exit accuracy at the last and middle layer, baseline → LayerSkip | Llama2 7B/13B, Llama3 8B, Llama3.2 1B, continual pretraining | Llama2 7B last layer 14.3 → 12.2, middle layer 0 → 2.05; Llama3 8B last layer 54.2 → 45.0[^elhoushiLayerSkipEnablingEarly2024] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Math task for [AdaSPEC](../methods/adaspec.md) draft distillation; acceptance rate; ablations | Pythia-31M → 1.4B and CodeGen-350M → Phi-2, greedy verification; also Qwen2.5-0.5B → 32B | $\alpha$ 57.58% (DistillSpec) → 62.63% (Pythia, 3 epochs); 84.43% → 86.21% (Qwen2.5)[^huAdaSPECSelectiveKnowledge2025] |
+| [Yu et al. 2026](../papers/yuIntrospectiveDiffusionLanguage2026.md) | Accuracy of a diffusion LM converted from an AR model ([I-DLM](../methods/i-dlm.md)) | Qwen3 chat template with thinking, temperature 1.0, three runs; 1,319 problems | I-DLM-8B 95.0 vs Qwen3-8B 96.0; I-DLM-32B 94.9 vs Qwen3-32B 94.7; peak 925 tokens/s per request on B200 at stride 8[^yuIntrospectiveDiffusionLanguage2026] |
 
 ## Speed metrics
 
@@ -734,3 +766,11 @@ The EAGLE-3 paper measures against Huggingface.transformers and does not state t
 [^xiaShearedLLaMAAccelerating2024]: Xia et al. 2024
 [^wangEfficientOnDeviceDiffusion2026]: Wang et al. 2026
 [^zhouDistillSpecImprovingSpeculative2024]: Zhou et al. 2024
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026
+[^agarwalOnPolicyDistillationLanguage2024]: Agarwal et al. 2024
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

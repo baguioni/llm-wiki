@@ -258,7 +258,7 @@ Loss decay makes training converge faster and to a better result than uniform to
 
 - Methods: [DFlash](../methods/dflash.md), [Speculative decoding](../methods/speculative-decoding.md), [Block diffusion](../methods/block-diffusion.md), [KV injection](../methods/kv-injection.md)
 - Systems compared or built on: [EAGLE-3](../methods/eagle-3.md), [SGLang](../methods/sglang.md), [vLLM](../methods/vllm.md)
-- Datasets: [GSM8K](../datasets/gsm8k.md), [MATH-500](../datasets/math-500.md), [HumanEval](../datasets/humaneval.md), [MBPP](../datasets/mbpp.md), [LiveCodeBench](../datasets/livecodebench.md), [MT-Bench](../datasets/mt-bench.md), [Alpaca](../datasets/alpaca.md), [ShareGPT](../datasets/sharegpt.md)
+- Datasets: [GSM8K](../datasets/gsm8k.md), [MATH-500](../datasets/math-500.md), [HumanEval](../datasets/humaneval.md), [MBPP](../datasets/mbpp.md), [LiveCodeBench](../datasets/livecodebench.md), [MT-Bench](../datasets/mt-bench.md), [Alpaca](../datasets/alpaca.md), [ShareGPT](../datasets/sharegpt.md), [UltraChat](../datasets/ultrachat.md), [Nemotron Post-Training Dataset](../datasets/nemotron-post-training.md)
 - Papers in this wiki cited by this paper: [EAGLE-3](liEAGLE3ScalingInference2025.md), [SGLang](zhengSGLangEfficientExecution2024.md)
 
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026

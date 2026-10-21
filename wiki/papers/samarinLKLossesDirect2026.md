@@ -200,4 +200,9 @@ All rows: [^samarinLKLossesDirect2026]
 - Datasets: [MT-Bench](../datasets/mt-bench.md), [HumanEval](../datasets/humaneval.md), [GSM8K](../datasets/gsm8k.md), [Infinity-Instruct](../datasets/infinity-instruct.md)
 - Papers in this wiki cited by this paper: [EAGLE-3](liEAGLE3ScalingInference2025.md), [DistillSpec](zhouDistillSpecImprovingSpeculative2024.md)
 
+## Open questions and results
+
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^samarinLKLossesDirect2026]: Samarin et al. 2026

@@ -34,6 +34,27 @@ sources:
   - id: wangWhenRLMeets2026
     resource: zotero://select/items/@wangWhenRLMeets2026
     title: "When RL Meets Adaptive Speculative Training: A Unified Training-Serving System"
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: drafter-evaluation
+    resource: raw/experiments/drafter-evaluation.md
+    title: "Drafter evaluation: six Q4_0 draft models for Qwen3-14B (phone drafts, spark verifies)"
+  - id: drafter-evaluation-server-only-chain
+    resource: raw/experiments/drafter-evaluation-server-only-chain.md
+    title: "Drafter evaluation, server-only chain7: all six drafters in PyTorch on the GB10 (no phone)"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # EAGLE-3
@@ -260,6 +281,77 @@ All rows: [^liuWhenParallelDrafter2026]
 
 Aurora uses EAGLE-3 as its speculative decoding framework in SGLang, with Qwen3-8B on H100 GPUs, 5 speculative steps, top-$k$ sampling 1, and 6 draft tokens per step. On mixed traffic the static baseline has an acceptance length of 2.63 and the pretrained-then-finetuned baseline 2.99. Under an ordered domain shift, the pretrained static speculator has an acceptance length of 2.57 and 288.8 tokens/s.[^wangWhenRLMeets2026]
 
+### PARD (An et al. 2025)
+
+Official EAGLE-3 checkpoints, vLLM, one A100-40GB. Each cell is tokens/s / speedup over autoregressive decoding. No acceptance length is reported, and the temperature is not stated.[^anPARDAcceleratingLLM2025]
+
+| Target | HumanEval | GSM8K | SpecBench | Avg |
+|---|---|---|---|---|
+| LLaMA3.1-8B | 233.43 / 3.19 | 192.56 / 2.62 | 155.58 / 2.14 | 193.86 / 2.65 |
+| LLaMA3.3-70B | 95.17 / 3.91 | 75.34 / 3.10 | 63.14 / 2.64 | 77.88 / 3.22 |
+
+All rows: [^anPARDAcceleratingLLM2025]
+
+Acceptance rate on LLaMA3.1-8B at the first and fourth draft positions: 0.87 and 0.85 on HumanEval, 0.82 and 0.79 on GSM8K.[^anPARDAcceleratingLLM2025]
+
+### PARD-2 (An et al. 2026)
+
+vLLM, A100-40GB, temperature 0, thinking mode disabled, tree decoding disabled for all methods, EAGLE-3 draft length 8 ("its optimal open-source configuration"). The Qwen3 checkpoints are from Tencent AngelSlim. Each cell is speedup / $\tau$.[^anPARD2TargetAlignedParallel2026]
+
+| Target | HumanEval | GSM8K | Math-500 | MT-Bench | Average |
+|---|---|---|---|---|---|
+| Qwen3-8B | 2.11 / 2.68 | 1.98 / 2.44 | 1.90 / 2.32 | 1.71 / 2.05 | 1.93 / 2.37 |
+| Qwen3-14B | 2.32 / 2.86 | 2.10 / 2.50 | 2.09 / 2.49 | 1.72 / 1.97 | 2.06 / 2.46 |
+| Llama3.1-8B | 3.34 / 4.55 | 2.80 / 3.97 | 2.37 / 3.42 | 2.54 / 3.60 | 2.76 / 3.89 |
+
+All rows: [^anPARD2TargetAlignedParallel2026]
+
+### Osprey (Bie et al. 2026)
+
+SGLang, batch size 1, 5 steps, top-$k$ 1, 6 draft tokens. AL is the mean accepted length.[^bieOspreyTargetagnosticPretraining2026]
+
+- Qwen3-8B, 1-layer EAGLE-3 trained from scratch on one domain and evaluated on five: mean AL 3.176 over 25 pairs, 3.971 in-domain, 2.977 out-of-domain. Trained on math, it gets 5.058 on math and 1.857 on code.[^bieOspreyTargetagnosticPretraining2026]
+- Qwen3-8B serving sweep on one H100 (AL / tokens/s): 2.34 / 217 at batch size 1, 2.35 / 2534 at batch size 16, and 2.17 / 195 at temperature 1.0.[^bieOspreyTargetagnosticPretraining2026]
+- Llama-3.3-70B-Instruct: mean AL 2.45 and 155.8 tokens/s for the authors' reproduction, and 2.33 and 150.3 tokens/s for the official checkpoint (yuhuili/EAGLE3-LLaMA3.3-Instruct-70B). On math the reproduction reaches 3.41 and the official checkpoint 2.47.[^bieOspreyTargetagnosticPretraining2026]
+- MiniMax-M2.5, public checkpoint (thoughtworks/MiniMax-M2.5-Eagle3), FP8 on 4 B200: mean AL 2.634, 187.1 tokens/s.[^bieOspreyTargetagnosticPretraining2026]
+- A second draft layer adds $0.094$ AL and lowers throughput from 332 to 311 tokens/s.[^bieOspreyTargetagnosticPretraining2026]
+
+### Lever (Wang et al. 2026)
+
+Lever trains all its draft models with EAGLE-3 and uses the same target-draft pair for every speculative method on its phones. As a fixed 8-token chain with a flash-resident Qwen3-8B on a OnePlus 12, the EAGLE3 draft reaches a geometric mean of 1.206 tokens/s, against 0.840 for a Qwen3-0.6B draft.[^wangLeverSpeculativeLLM2026a]
+
+### I-DLM (Yu et al. 2026)
+
+Qwen3-8B target, draft `Tengyunw/qwen3_8b_eagle3`, SGLang on one H100, steps=3, topk=1, d=4 (3 speculations verified per step), temperature 1.0, 2,048 output tokens. Per-request tokens/s:[^yuIntrospectiveDiffusionLanguage2026]
+
+| Workload | Concurrency 1 | Concurrency 32 |
+|---|---|---|
+| MATH-500 | 238 | 176 |
+| LMSYS-Chat | 221 | 184 |
+| MBPP | 245 | — |
+
+All rows: [^yuIntrospectiveDiffusionLanguage2026]
+
+No speedup over autoregressive decoding and no acceptance length are reported for EAGLE-3.[^yuIntrospectiveDiffusionLanguage2026]
+
+### My experiment: [Six phone drafters for a Qwen3-14B server verifier](../experiments/drafter-evaluation-qwen3-14b.md)
+
+Galaxy S25 NPU drafts with a Q4_0 GGUF of `deepseek-ai/eagle3_qwen3_14b_ttt7` (DeepSpec, 1108 MB, full-vocabulary LM head), one decode per tree level. DGX Spark verifies Qwen3-14B-FP8, 60 Spec-Bench requests, temperature 0, 64 new tokens.[^drafter-evaluation]
+
+| Shape | tok/s | tok/round | draft ms |
+|---|---|---|---|
+| chain7 | 13.0 | 2.71 | 114.5 |
+| tree16 (8 beams × depth 6 × width 4) | 15.9 | 3.60 | 114.8 |
+| own-best (8 beams × depth 6 × width 8, budget 32) | 17.6 | 3.92 | 104.0 |
+
+All rows: [^drafter-evaluation]
+
+EAGLE-3 is the slowest of the six drafters in every shape, below the Qwen3-0.6B draft (15.6 / 16.6 / 18.5 tok/s). Its NPU reached 91–93 °C in tree16.[^drafter-evaluation]
+
+### My experiment: [Six drafters on the server GPU, chain7, no phone](../experiments/server-only-chain-drafter-evaluation.md)
+
+The same checkpoint in PyTorch bf16 (eager), drafting as chain7 on the DGX Spark GPU beside the target: 17.2 tok/s, 2.81 tok/round, 88.8 ms draft, against 13.0 tok/s on the phone. It is again the slowest of the six drafters, below Qwen3-0.6B (20.4 tok/s). Its commit step, which re-extends the committed cells through the head, averages 3.66 ms per round.[^drafter-evaluation-server-only-chain]
+
 ## Papers using it
 
 - [EAGLE-3 paper](../papers/liEAGLE3ScalingInference2025.md): proposes the method. See "Original results".[^liEAGLE3ScalingInference2025]
@@ -272,6 +364,11 @@ Aurora uses EAGLE-3 as its speculative decoding framework in SGLang, with Qwen3-
 - [SuffixDecoding](../papers/oliaroSuffixDecodingExtremeSpeculative2024.md): a baseline, and the fallback speculator of the hybrid mode. The hybrid of SuffixDecoding and EAGLE-3 reaches 2.500 (linear) on Spec-Bench against 2.367 for standalone eagle3.[^oliaroSuffixDecodingExtremeSpeculative2024]
 - [DPara](../papers/liuWhenParallelDrafter2026.md): a serial baseline (EAGLE3) and a parallel baseline (SSD-E3).[^liuWhenParallelDrafter2026]
 - [Aurora](../papers/wangWhenRLMeets2026.md): trains an EAGLE-3 speculator online from live inference traces, starting from random weights, and hot-swaps it into an SGLang server.[^wangWhenRLMeets2026]
+- [PARD](../papers/anPARDAcceleratingLLM2025.md) ([method page](../methods/pard.md)): a target-dependent baseline. PARD reports 1.15$\times$ the throughput of EAGLE-3 on LLaMA3.1-8B, and estimates EAGLE-3 training at 204.4 Pflops per 1M tokens for a 70B target against 20.22 for PARD.[^anPARDAcceleratingLLM2025]
+- [PARD-2](../papers/anPARD2TargetAlignedParallel2026.md): an autoregressive baseline run as a chain of 8 without trees. The paper describes EAGLE-3 as requiring grafted layers, unlike its standalone drafter.[^anPARD2TargetAlignedParallel2026]
+- [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md) ([method page](../methods/osprey.md)): keeps the EAGLE-3 drafter interface and training-time test, but starts the drafter body from a pretrained small LM. It raises mean AL by 16.1% (Qwen3-8B), 21.2% (Llama-3.3-70B, against the reproduction), and 22.7% (MiniMax-M2.5).[^bieOspreyTargetagnosticPretraining2026]
+- [Lever](../papers/wangLeverSpeculativeLLM2026a.md) ([method page](../methods/lever.md)): uses EAGLE-3 to train the draft models for on-phone speculative decoding.[^wangLeverSpeculativeLLM2026a]
+- [I-DLM](../papers/yuIntrospectiveDiffusionLanguage2026.md) ([method page](../methods/i-dlm.md)): the speculative decoding baseline. I-DLM-8B, a converted Qwen3-8B that needs no separate draft model, has higher per-request throughput than EAGLE-3 from concurrency 1 to 32 on MATH-500, LMSYS-Chat, and MBPP (341 vs 238 tok/s on MATH-500 at concurrency 1).[^yuIntrospectiveDiffusionLanguage2026]
 
 ## Strengths & Limitations
 
@@ -306,8 +403,10 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
    | LK losses | yuhuili checkpoint, chain $K=7$, vLLM v0.11.0, batch size 1 ($\tau$ / speedup) | 3.44 / 2.42 | 4.37 / 3.07 | 3.84 / 2.65 |
    | DFlash | official checkpoint, SGLang Spec-v1, B200, concurrency 1, 60 draft tokens | not measured | 2.0× / 4.65 | 1.9× / 4.55 |
    | SpecForge | existing open-source draft, SGLang, H200, concurrency 8 (speedup only) | 2.39 | 2.52 | 1.26 |
+   | PARD | official checkpoint, vLLM, A100-40GB, temperature not stated (speedup only) | not measured | 3.19 | 2.62 |
+   | PARD-2 | official checkpoint, chain of 8, no tree, vLLM, A100-40GB | 2.54 / 3.60 | 3.34 / 4.55 | 2.80 / 3.97 |
 
-   Rows: [^liEAGLE3ScalingInference2025], [^zhangLearningDraftAdaptive2026], [^samarinLKLossesDirect2026], [^chenDFlashBlockDiffusion2026], [^liSpecForgeFlexibleEfficient2026]. Cells are speedup / $\tau$ unless the row says otherwise.
+   Rows: [^liEAGLE3ScalingInference2025], [^zhangLearningDraftAdaptive2026], [^samarinLKLossesDirect2026], [^chenDFlashBlockDiffusion2026], [^liSpecForgeFlexibleEfficient2026], [^anPARDAcceleratingLLM2025], [^anPARD2TargetAlignedParallel2026]. Cells are speedup / $\tau$ unless the row says otherwise.
 
    LTD's $\tau$ (6.39, 6.44) is close to the original (6.13, 6.23), but its speedup is lower (3.70 vs 4.40x on MT-bench, 3.58 vs 4.48x on GSM8K). The likely cause is hardware and baseline implementation, since LTD uses the official weights and default tree. The engine-based numbers (LK losses, DFlash, SpecForge) have lower $\tau$ as well as lower speedup. Their settings use a chain or a smaller tree, a serving engine baseline that is already optimized, and for SpecForge a concurrency of 8. On Alpaca, LTD (4.26 / 6.93) and the original (4.82x / 6.70) also differ, and DFlash measures 1.8× / 4.07 with 60 draft tokens at concurrency 1.[^zhangLearningDraftAdaptive2026][^liEAGLE3ScalingInference2025][^chenDFlashBlockDiffusion2026]
 
@@ -315,7 +414,7 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
 
 4. **Vicuna-13B and DeepSeek-R1-Distill-LLaMA 8B, temperature 0.** The EAGLE-3 paper reports 5.58x / 6.65 (MT-bench), 5.32x / 6.29 (GSM8K), and 5.16x / 6.17 (Alpaca) for Vicuna 13B.[^liEAGLE3ScalingInference2025] LTD reports 4.48 / 7.22, 4.36 / 6.58, and 4.16 / 6.47 for Vicuna-13B-v1.3 with the official release.[^zhangLearningDraftAdaptive2026] For DeepSeek-R1-Distill-LLaMA 8B the original has 4.05x / 5.58, 5.01x / 6.93, and 3.65x / 5.37 on the same three tasks, and LTD has 3.67 / 5.82, 4.73 / 7.39, and 3.65 / 5.63.[^liEAGLE3ScalingInference2025][^zhangLearningDraftAdaptive2026] LTD's $\tau$ is higher and its speedup is lower or equal. LTD runs on a single A100. The original hardware is not stated.
 
-5. **LLaMA-3.3-70B, temperature 0.** The EAGLE-3 paper reports 4.11x / 5.63 (MT-bench), 4.79x / 6.52 (HumanEval), and 4.34x / 6.15 (GSM8K).[^liEAGLE3ScalingInference2025] LK losses measures the yuhuili checkpoint at $\tau$ / speedup of 3.13 / 2.50, 3.96 / 3.12, and 3.76 / 2.90 (chain $K=7$, vLLM).[^samarinLKLossesDirect2026] SpecForge measures the existing draft at speedups of 2.35, 2.29, and 1.15 (SGLang, 4 GPUs, concurrency 16).[^liSpecForgeFlexibleEfficient2026]
+5. **LLaMA-3.3-70B, temperature 0.** The EAGLE-3 paper reports 4.11x / 5.63 (MT-bench), 4.79x / 6.52 (HumanEval), and 4.34x / 6.15 (GSM8K).[^liEAGLE3ScalingInference2025] LK losses measures the yuhuili checkpoint at $\tau$ / speedup of 3.13 / 2.50, 3.96 / 3.12, and 3.76 / 2.90 (chain $K=7$, vLLM).[^samarinLKLossesDirect2026] SpecForge measures the existing draft at speedups of 2.35, 2.29, and 1.15 (SGLang, 4 GPUs, concurrency 16).[^liSpecForgeFlexibleEfficient2026] PARD measures the official checkpoint on vLLM at 3.91 on HumanEval and 3.10 on GSM8K.[^anPARDAcceleratingLLM2025] Osprey measures the official checkpoint at a mean AL of 2.33 over five domains in SGLang with 6 draft tokens, below the authors' own reproduction (2.45).[^bieOspreyTargetagnosticPretraining2026]
 
 6. **Qwen3 accepted length.** Four papers measure EAGLE-3 on Qwen3 and their $\tau$ values on GSM8K differ by a wide margin:
 
@@ -326,14 +425,17 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
    | DSpark | retrained on 1.3 million PerfectBlend samples, chain of 7, temperature 1.0 | 5.30 | 5.24 |
    | DPara | source of weights not stated, draft length 7, greedy | 2.83 | 2.94 |
    | LTD | AngelSlim, grid-searched tree, temperature 0 | not measured | 3.95 |
+   | PARD-2 | AngelSlim, chain of 8, no tree, vLLM, temperature 0 | 2.44 | 2.50 |
 
-   Rows: [^chenDFlashBlockDiffusion2026], [^chenDFlashBlockDiffusion2026], [^chengDSparkConfidenceScheduledSpeculative2026], [^liuWhenParallelDrafter2026], [^zhangLearningDraftAdaptive2026].
+   Rows: [^chenDFlashBlockDiffusion2026], [^chenDFlashBlockDiffusion2026], [^chengDSparkConfidenceScheduledSpeculative2026], [^liuWhenParallelDrafter2026], [^zhangLearningDraftAdaptive2026], [^anPARD2TargetAlignedParallel2026].
+
+   Osprey does not report GSM8K, but its from-scratch 1-layer EAGLE-3 for Qwen3-8B reaches 5.058 in-domain on math with 6 draft tokens in SGLang, and 2.34 at batch size 1 in its serving sweep.[^bieOspreyTargetagnosticPretraining2026] PARD-2's chain of 8 with the AngelSlim checkpoint gives the lowest Qwen3 values in this table.[^anPARD2TargetAlignedParallel2026]
 
    DSpark's retrained Eagle3 has a much higher $\tau$ with a chain at temperature 1.0 than the AngelSlim checkpoint has with a 60-node tree at temperature 0. The likely cause is the checkpoint: DSpark retrains for 10 epochs on 1.3 million samples with target-regenerated responses. The speedups also differ: Qwen3-8B GSM8K is 1.94× to 2.23× in DFlash and 1.44× in DPara, and Qwen3-14B GSM8K is 1.76× in DPara and 2.75 in LTD's grid search.[^chenDFlashBlockDiffusion2026][^liuWhenParallelDrafter2026][^zhangLearningDraftAdaptive2026]
 
-7. **EAGLE-3 vs parallel drafters.** DFlash reports a higher $\tau$ than EAGLE-3 on every Qwen3 benchmark.[^chenDFlashBlockDiffusion2026] DSpark confirms this for Qwen3-4B, 8B, and 14B with all drafters retrained on the same data, but on Gemma4-12B its retrained Eagle3 is above DFlash in every column (for example 5.87 vs 5.45 on GSM8K).[^chengDSparkConfidenceScheduledSpeculative2026] In DFlash's own LLaMA-3.1-8B experiment, EAGLE-3 (60) has a higher average $\tau$ than DFlash (10) on GSM8K (4.55 vs 4.32) and Alpaca (4.07 vs 3.73), while DFlash has the higher speedup.[^chenDFlashBlockDiffusion2026]
+7. **EAGLE-3 vs parallel drafters.** DFlash reports a higher $\tau$ than EAGLE-3 on every Qwen3 benchmark.[^chenDFlashBlockDiffusion2026] DSpark confirms this for Qwen3-4B, 8B, and 14B with all drafters retrained on the same data, but on Gemma4-12B its retrained Eagle3 is above DFlash in every column (for example 5.87 vs 5.45 on GSM8K).[^chengDSparkConfidenceScheduledSpeculative2026] In DFlash's own LLaMA-3.1-8B experiment, EAGLE-3 (60) has a higher average $\tau$ than DFlash (10) on GSM8K (4.55 vs 4.32) and Alpaca (4.07 vs 3.73), while DFlash has the higher speedup.[^chenDFlashBlockDiffusion2026] PARD-2 has its parallel drafter above EAGLE-3 in every cell on Qwen3-8B, Qwen3-14B, and Llama3.1-8B.[^anPARD2TargetAlignedParallel2026] PARD has the higher average speedup on LLaMA3.1-8B and LLaMA3.3-70B, but EAGLE-3 is ahead on LLaMA3.3-70B SpecBench (2.64 vs 2.40).[^anPARDAcceleratingLLM2025]
 
-8. **EAGLE-3 vs an independent small draft model.** The EAGLE-3 paper reports 5.51x mean speedup for EAGLE-3 against 1.92x for standard speculative sampling (SpS, Vicuna-68M draft) on Vicuna 13B.[^liEAGLE3ScalingInference2025] SSD finds that Llama-3.2-1B outperforms EAGLE-3 as a draft model for Llama-3.1-70B in SGLang (201.9 vs 192.8 tok/s), while in vLLM EAGLE-3 is faster (197.6 vs 136.0 tok/s).[^kumarSpeculativeSpeculativeDecoding2026] DPara measures standard SD with a Qwen3-0.6B draft at 1.83× on Qwen3-14B against 1.73× for EAGLE3.[^liuWhenParallelDrafter2026] The targets, draft models, engines, and hardware all differ.
+8. **EAGLE-3 vs an independent small draft model.** The EAGLE-3 paper reports 5.51x mean speedup for EAGLE-3 against 1.92x for standard speculative sampling (SpS, Vicuna-68M draft) on Vicuna 13B.[^liEAGLE3ScalingInference2025] SSD finds that Llama-3.2-1B outperforms EAGLE-3 as a draft model for Llama-3.1-70B in SGLang (201.9 vs 192.8 tok/s), while in vLLM EAGLE-3 is faster (197.6 vs 136.0 tok/s).[^kumarSpeculativeSpeculativeDecoding2026] DPara measures standard SD with a Qwen3-0.6B draft at 1.83× on Qwen3-14B against 1.73× for EAGLE3.[^liuWhenParallelDrafter2026] On phones, Lever has its EAGLE3 draft ahead of a Qwen3-0.6B draft (1.206 against 0.840 tokens/s, 8-token chain, flash-resident Qwen3-8B verified on the phone),[^wangLeverSpeculativeLLM2026a] while my evaluation has the Qwen3-0.6B draft ahead of EAGLE-3 in every shape (15.6 against 13.0 tok/s as a chain, Qwen3-14B-FP8 verified on a server, DeepSpec ttt7 checkpoint with a full-vocabulary head).[^drafter-evaluation] The order is the same with both drafting on the server GPU (20.4 against 17.2 tok/s as a chain).[^drafter-evaluation-server-only-chain] The targets, draft models, engines, and hardware all differ.
 
 9. **EAGLE-3 vs EAGLE-2.** The EAGLE-3 paper states that EAGLE-3 achieves the highest speedup on all tasks and target models, with a 20%-40% improvement over EAGLE-2.[^liEAGLE3ScalingInference2025] SuffixDecoding measures eagle3 below eagle2 on AgenticSQL (1.623 vs 1.864 overall).[^oliaroSuffixDecodingExtremeSpeculative2024] AgenticSQL is a proprietary agentic workload that is not in the EAGLE-3 paper's task set.
 
@@ -344,7 +446,7 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
 - Predecessors: [EAGLE](../methods/eagle.md), [EAGLE-2](../methods/eagle-2.md)
 - Training technique: [Training-time test](../methods/training-time-test.md)
 - Parent concept: [Speculative decoding](../methods/speculative-decoding.md), [Tree-based speculation](../methods/tree-based-speculation.md)
-- Methods compared against it: [DFlash](../methods/dflash.md), [DSpark](../methods/dspark.md), [Speculative speculative decoding](../methods/speculative-speculative-decoding.md), [PEARL](../methods/pearl.md), [Medusa](../methods/medusa.md), [Multi-token prediction](../methods/multi-token-prediction.md)
+- Methods compared against it: [DFlash](../methods/dflash.md), [DSpark](../methods/dspark.md), [PARD](../methods/pard.md), [Osprey](../methods/osprey.md), [Speculative speculative decoding](../methods/speculative-speculative-decoding.md), [PEARL](../methods/pearl.md), [Medusa](../methods/medusa.md), [Multi-token prediction](../methods/multi-token-prediction.md)
 - Serving engines: [SGLang](../methods/sglang.md), [vLLM](../methods/vllm.md)
 - Benchmarks and datasets: [Spec-Bench](../benchmarks/spec-bench.md), [MT-Bench](../datasets/mt-bench.md), [HumanEval](../datasets/humaneval.md), [GSM8K](../datasets/gsm8k.md), [Alpaca](../datasets/alpaca.md), [ShareGPT](../datasets/sharegpt.md), [Open-PerfectBlend](../datasets/perfectblend.md)
 
@@ -353,6 +455,8 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
 - [Why do reported EAGLE-3 numbers differ so much between papers?](../questions/eagle-3-baseline-variance.md)
 - [Does speculative decoding still help at large batch sizes?](../questions/speculative-decoding-at-large-batch.md)
 - [DFlash, DSpark, and EAGLE-3: how they draft and what they report on Qwen3-8B](../analyses/dflash-dspark-eagle-3-drafting-comparison.md)
+- [Why parallel drafters beat EAGLE-3](../analyses/why-parallel-drafters-beat-eagle-3.md)
+- [I-DLM-8B outpaces EAGLE-3 in per-request throughput on Qwen3-8B](../results/i-dlm-vs-eagle-3-throughput.md)
 
 [^liEAGLE3ScalingInference2025]: Li et al. 2025
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
@@ -364,3 +468,10 @@ Later papers report EAGLE-3 speedups well below the original paper. No two paper
 [^oliaroSuffixDecodingExtremeSpeculative2024]: Oliaro et al. 2024
 [^liuWhenParallelDrafter2026]: Liu et al. 2026
 [^wangWhenRLMeets2026]: Wang et al. 2026
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^drafter-evaluation]: My drafter evaluation report, runs of 2026-10-15/16
+[^drafter-evaluation-server-only-chain]: My server-only chain7 drafter evaluation report, runs of 2026-10-19
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

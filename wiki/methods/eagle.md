@@ -19,6 +19,15 @@ sources:
   - id: kumarSpeculativeSpeculativeDecoding2026
     resource: zotero://select/items/@kumarSpeculativeSpeculativeDecoding2026
     title: Speculative Speculative Decoding
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: xieNovelHatShapedDeviceCloud2025
+    resource: zotero://select/items/@xieNovelHatShapedDeviceCloud2025
+    title: A Novel Hat-Shaped Device-Cloud Collaborative Inference Framework for Large Language Models
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # EAGLE
@@ -84,6 +93,18 @@ All rows: [^oliaroSuffixDecodingExtremeSpeculative2024]
 
 SDFP excludes EAGLE and Medusa from its comparison, because they require additional auxiliary networks or fine-tuning.[^weiSDFPSpeculativeDecoding2026]
 
+### PARD (An et al. 2025)
+
+Official EAGLE checkpoint on LLaMA3.1-8B, vLLM, A100-40GB: 136.05 tokens/s / 1.86 on HumanEval, 110.81 / 1.51 on GSM8K, and 100.11 / 1.38 on SpecBench. Acceptance rate at the first draft position is 0.83 on HumanEval and 0.79 on GSM8K.[^anPARDAcceleratingLLM2025] Speedup on HumanEval falls from 1.86 at batch size 1 to 1.19 at batch size 16.[^anPARDAcceleratingLLM2025]
+
+### HAT (Xie et al. 2025)
+
+HAT trains its on-device adapter with the EAGLE loss: Smooth L1 on the hidden state before the head plus cross-entropy, weighted $w_{ce}=0.1$.[^xieNovelHatShapedDeviceCloud2025]
+
+### AdaSPEC (Hu et al. 2025)
+
+[AdaSPEC](../methods/adaspec.md) applies its token-selective distillation inside the EAGLE recipe: Vicuna-7B-v1.3 target, 3 epochs on [ShareGPT](../datasets/sharegpt.md), evaluated on [MT-Bench](../datasets/mt-bench.md). Training first-token accuracy rises from 75.3% to 76.3%, time per sentence falls from 8.85 s to 8.06 s, and throughput rises from 63.48 to 68.21 tokens/s.[^huAdaSPECSelectiveKnowledge2025]
+
 ## Strengths & Limitations
 
 - Strength: by using the target model's features, EAGLE achieves better acceleration than vanilla speculative sampling. On Vicuna 13B at temperature 0 its mean speedup is 3.05x against 1.92x for standard speculative sampling with a Vicuna-68M draft.[^liEAGLE3ScalingInference2025]
@@ -106,3 +127,6 @@ Caveat on the numbers: the EAGLE-3 paper's EAGLE row is for Vicuna 13B, and Suff
 [^oliaroSuffixDecodingExtremeSpeculative2024]: Oliaro et al. 2024
 [^weiSDFPSpeculativeDecoding2026]: Wei et al. 2026
 [^kumarSpeculativeSpeculativeDecoding2026]: Kumar et al. 2026
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^xieNovelHatShapedDeviceCloud2025]: Xie et al. 2025
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

@@ -188,4 +188,10 @@ Estimated end-to-end impact (Table 8):[^caiYourNPUReady2026]
 - Techniques studied: [Activation quantization](../methods/activation-quantization.md), [DVFS](../methods/dvfs.md), [KV cache](../methods/kv-cache.md)
 - Datasets and benchmarks: [WikiText-2](../datasets/wikitext-2.md), [MathQA](../datasets/mathqa.md), [RoleBench](../datasets/rolebench.md), [LongBench](../benchmarks/longbench.md)
 
+## Open questions and results
+
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+- [Quantization of the target and the draft in speculative decoding](../analyses/quantization-in-speculative-decoding.md)
+
 [^caiYourNPUReady2026]: Cai et al. 2026

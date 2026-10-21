@@ -19,6 +19,9 @@ sources:
   - id: chenDFlashBlockDiffusion2026
     resource: zotero://select/items/@chenDFlashBlockDiffusion2026
     title: "DFlash: Block Diffusion for Flash Speculative Decoding"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
 ---
 
 # Training-Time Test
@@ -65,6 +68,7 @@ Training-time test (TTT) is the training technique introduced with [EAGLE-3](../
 - [DSpark](../papers/chengDSparkConfidenceScheduledSpeculative2026.md): describes Eagle3 as an autoregressive drafter based on TTT and sets its TTT horizon to 7 for the baseline.[^chengDSparkConfidenceScheduledSpeculative2026]
 - [Aurora](../papers/wangWhenRLMeets2026.md): uses a TTT length of 5 with a maximum sequence length of 2,048 for online speculator training.[^wangWhenRLMeets2026]
 - [DFlash](../papers/chenDFlashBlockDiffusion2026.md): names the costly training-time test as the reason long-context training is challenging for methods such as EAGLE-3, and avoids it with a fixed number of masked blocks per sequence.[^chenDFlashBlockDiffusion2026]
+- [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md): adapts its pretrained drafter to each target with EAGLE-3's TTT, TTT length 5 on Qwen3-8B, and a discounted loss $\sum_{k}\lambda^{k}\operatorname{CE}$ with $\lambda=0.8$.[^bieOspreyTargetagnosticPretraining2026]
 
 ## Strengths & Limitations
 
@@ -86,3 +90,4 @@ Training-time test (TTT) is the training technique introduced with [EAGLE-3](../
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
 [^wangWhenRLMeets2026]: Wang et al. 2026
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026

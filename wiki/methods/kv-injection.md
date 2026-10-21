@@ -73,6 +73,7 @@ A 5-layer block diffusion drafter without any conditioning from the target model
 ## Related
 
 - [DFlash](../methods/dflash.md), [DSpark](../methods/dspark.md), [EAGLE-3](../methods/eagle-3.md), [KV cache](../methods/kv-cache.md), [Speculative decoding](../methods/speculative-decoding.md)
+- [Why parallel drafters beat EAGLE-3](../analyses/why-parallel-drafters-beat-eagle-3.md)
 
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026

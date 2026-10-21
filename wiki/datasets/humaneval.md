@@ -40,13 +40,31 @@ sources:
   - id: zhangLearningDraftAdaptive2026
     resource: zotero://select/items/@zhangLearningDraftAdaptive2026
     title: "Learning To Draft: Adaptive Speculative Decoding with Reinforcement Learning"
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # HumanEval
 
 ## Overview
 
-HumanEval measures function body generation accuracy given natural language descriptions.[^shinnReflexionLanguageAgents2023] The papers in this wiki use it in two different ways. Speculative-decoding papers use its prompts as the code-generation workload for measuring speedup and acceptance length.[^liEAGLE3ScalingInference2025][^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026][^liSpecForgeFlexibleEfficient2026][^samarinLKLossesDirect2026][^kumarSpeculativeSpeculativeDecoding2026] Other papers report task accuracy on it, mostly as pass@1.[^shinnReflexionLanguageAgents2023][^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangAgentDropoutDynamicAgent2025] One paper uses it as training data for decoding policies.[^zhangLearningDraftAdaptive2026]
+HumanEval measures function body generation accuracy given natural language descriptions.[^shinnReflexionLanguageAgents2023] The papers in this wiki use it in two different ways. Speculative-decoding papers use its prompts as the code-generation workload for measuring speedup and acceptance length.[^liEAGLE3ScalingInference2025][^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026][^liSpecForgeFlexibleEfficient2026][^samarinLKLossesDirect2026][^kumarSpeculativeSpeculativeDecoding2026] Other papers report task accuracy on it, mostly as pass@1.[^shinnReflexionLanguageAgents2023][^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangAgentDropoutDynamicAgent2025][^elhoushiLayerSkipEnablingEarly2024][^yuIntrospectiveDiffusionLanguage2026] LayerSkip also uses it as a self-speculative decoding workload.[^elhoushiLayerSkipEnablingEarly2024] One paper uses it as training data for decoding policies.[^zhangLearningDraftAdaptive2026]
 
 ## Composition
 
@@ -72,6 +90,12 @@ HumanEval measures function body generation accuracy given natural language desc
 | [Minitron](../papers/muralidharanCompactLanguageModels2024.md) | Zero-shot pass@1 of pruned and baseline models | Minitron 8B and 4B and baselines; temperature 0.2, top-p 0.95 | Minitron 8B 31.6, Minitron 4B 23.3[^muralidharanCompactLanguageModels2024] |
 | [Sheared-LLaMA](../papers/xiaShearedLLaMAAccelerating2024.md) | Pass@1 and Pass@5 | Sheared-LLaMA-2.7B and 3B-class baselines | Sheared-LLaMA-2.7B (Scaling): 4.9 Pass@1, 9.2 Pass@5[^xiaShearedLLaMAAccelerating2024] |
 | [AgentDropout](../papers/wangAgentDropoutDynamicAgent2025.md) | Code-generation score of multi-agent systems | Llama3-8B-Instruct, Qwen2.5-72B-Instruct, Deepseek-V3-671B-Instruct; temperature 1 | AgentDropout: 55.84, 87.92, 91.74[^wangAgentDropoutDynamicAgent2025] |
+| [PARD](../papers/anPARDAcceleratingLLM2025.md) | Code task for tokens/s and speedup | LLaMA3, Qwen2, Qwen2.5, DeepSeek-R1-Qwen targets; vLLM, A100-40GB | PARD on LLaMA3.1-8B: 264.88 tokens/s, 3.63[^anPARDAcceleratingLLM2025] |
+| [PARD-2](../papers/anPARD2TargetAlignedParallel2026.md) | Code task for speedup and $\tau$ | Qwen3-8B, 14B, 32B, Llama3.1-8B; vLLM, temperature 0 | PARD-2 on Llama3.1-8B: 6.94, $\tau$ 9.19[^anPARD2TargetAlignedParallel2026] |
+| [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md) | 64 prompts for accepted length and throughput | MiniMax-M2.5, SGLang, FP8 on 4 B200 | AL 3.565 for Osprey against 2.570 for EAGLE-3[^bieOspreyTargetagnosticPretraining2026] |
+| [Lever](../papers/wangLeverSpeculativeLLM2026a.md) | Decoding workload, 50 samples, up to 128 output tokens | Four targets on three Snapdragon phones, greedy | Lever on Qwen3-4B, Honor Magic V5: 7.27 tokens/s[^wangLeverSpeculativeLLM2026a] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | Coding prompt for [LayerSkip](../methods/layerskip.md) self-speculative decoding; also early exit accuracy | Llama2 7B/13B continual pretraining (H100); Llama1 7B finetuned on code (A100); greedy | Self-speculation 1.83× (Llama2 7B), 1.66× (13B), 1.82× (code-finetuned Llama1 7B); Llama2 7B last-layer score 13.4 → 15.9 with LayerSkip[^elhoushiLayerSkipEnablingEarly2024] |
+| [Yu et al. 2026](../papers/yuIntrospectiveDiffusionLanguage2026.md) | Accuracy of [I-DLM](../methods/i-dlm.md) against its AR base | Qwen3 chat template with thinking, temperature 1.0, three runs; 164 problems, pass@1 | I-DLM-8B 93.3 vs Qwen3-8B 95.1; 60.3 when trained as block diffusion instead[^yuIntrospectiveDiffusionLanguage2026] |
 
 ## Speed metrics
 
@@ -663,3 +687,9 @@ Reflexion's Table 1 gives the GPT-4 pass@1 on HumanEval Python as 80.1, and its 
 [^xiaShearedLLaMAAccelerating2024]: Xia et al. 2024
 [^wangAgentDropoutDynamicAgent2025]: Wang et al. 2025
 [^zhangLearningDraftAdaptive2026]: Zhang et al. 2026
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

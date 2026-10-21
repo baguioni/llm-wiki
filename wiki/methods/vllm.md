@@ -55,6 +55,18 @@ sources:
   - id: zhengSGLangEfficientExecution2024
     resource: zotero://select/items/@zhengSGLangEfficientExecution2024
     title: "SGLang: Efficient Execution of Structured Language Model Programs"
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # vLLM
@@ -119,6 +131,10 @@ Role is one of: *baseline* (the paper compares against vLLM), *built on* (the pa
 | LK Losses[^samarinLKLossesDirect2026] | host | v0.11.0 with a rejection-sampling patch | none | Draft-model evaluation. The paper states that the unpatched implementation samples draft tokens greedily while using temperature-scaled target logits in the acceptance criterion |
 | KAIROS[^yuanKAIROSStatefulContextAware2026] | host | v0.14.0, one H100 per instance, context caching enabled | none against vLLM itself. In the paper's thrashing experiment on a vLLM server, recomputation and LMCache-based offloading reduce average agent completion throughput by 44.2% and 42.1% | Qwen3-Coder-30B, mini-swe-agent |
 | SGLang[^zhengSGLangEfficientExecution2024] | baseline | v0.2.5 with its default API server | Up to 6.4× higher throughput and up to 3.7× lower latency against Guidance, vLLM, and LMQL together | Llama-7B on A10G, LM-program benchmarks. Per-benchmark values are only in figures |
+| PARD[^anPARDAcceleratingLLM2025] | host | not stated, one A100-40GB | PARD on LLaMA3.1-8B: 264.88 tokens/s against 73.07 for autoregressive decoding on HumanEval | On LLaMA3.1-8B (average of HumanEval and GSM8K), vanilla SD reaches 1.36 under Transformers and 2.02 under vLLM, and PARD 3.70x and 3.41. The paper runs all final experiments on vLLM to reflect real-world usage |
+| PARD-2[^anPARD2TargetAlignedParallel2026] | host | not stated, A100-40GB, TP=1 (TP=2 for Qwen3-32B), tree decoding disabled | PARD-2 average 5.81× on Qwen3-8B | Greedy decoding, batch sizes 1 to 64 in the frontier plot |
+| HyCo[^baeHyCoHybridDrafting2026] | kernels only | The verifier engine is SpecEdge's server; the Gemma 4 experts (8 of 128 per token) run through vLLM's fused Marlin mixture-of-experts kernel, and attention projections as 4-bit Marlin matrix products | none | Gemma 4 26B-A4B AWQ 4-bit on one RTX PRO 6000 |
+| AdaSPEC[^huAdaSPECSelectiveKnowledge2025] | host | version not stated, one A100, greedy decoding | none against vLLM itself; Pythia-31M → 1.4B drafts reach 181.67 (AdaSPEC) vs 149.15 (DistillSpec) tokens/s on MBPP | Wall-clock check of draft distillation methods, models trained for 3 epochs |
 
 ## Strengths & Limitations
 
@@ -145,7 +161,7 @@ Limitations that the wiki's papers attribute to vLLM:
 - Other engines: [SGLang](sglang.md)
 - Systems built on vLLM: [ThunderAgent](thunderagent.md)
 - Related storage layer: [LMCache](lmcache.md), [KV cache offloading](kv-cache-offloading.md), [KV cache swapping](kv-cache-swapping.md)
-- Papers: [InferCept](../papers/abhyankarInferCeptEfficientIntercept2024.md), [Symphony](../papers/agarwalSYMPHONYImprovingMemory2024.md), [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [CoSine](../papers/gaoCollaborativeSpeculativeInference.md), [ThunderAgent](../papers/kangThunderAgentSimpleFast2026.md), [AgentScope](../papers/gaoAgentScopeFlexibleRobust2024.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [Parrot](../papers/linParrotEfficientServing2024.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [Autellix](../papers/luoAutellixEfficientServing.md), [EAGLE-3](../papers/liEAGLE3ScalingInference2025.md), [SuffixDecoding](../papers/oliaroSuffixDecodingExtremeSpeculative2024.md), [Leyline](../papers/maLeylineKVCache2026.md), [AgentDropout](../papers/wangAgentDropoutDynamicAgent2025.md), [LK Losses](../papers/samarinLKLossesDirect2026.md), [KAIROS](../papers/yuanKAIROSStatefulContextAware2026.md), [SGLang](../papers/zhengSGLangEfficientExecution2024.md)
+- Papers: [InferCept](../papers/abhyankarInferCeptEfficientIntercept2024.md), [Symphony](../papers/agarwalSYMPHONYImprovingMemory2024.md), [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [CoSine](../papers/gaoCollaborativeSpeculativeInference.md), [ThunderAgent](../papers/kangThunderAgentSimpleFast2026.md), [AgentScope](../papers/gaoAgentScopeFlexibleRobust2024.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [Parrot](../papers/linParrotEfficientServing2024.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [Autellix](../papers/luoAutellixEfficientServing.md), [EAGLE-3](../papers/liEAGLE3ScalingInference2025.md), [SuffixDecoding](../papers/oliaroSuffixDecodingExtremeSpeculative2024.md), [Leyline](../papers/maLeylineKVCache2026.md), [AgentDropout](../papers/wangAgentDropoutDynamicAgent2025.md), [LK Losses](../papers/samarinLKLossesDirect2026.md), [KAIROS](../papers/yuanKAIROSStatefulContextAware2026.md), [SGLang](../papers/zhengSGLangEfficientExecution2024.md), [AdaSPEC](../papers/huAdaSPECSelectiveKnowledge2025.md)
 
 [^abhyankarInferCeptEfficientIntercept2024]: Abhyankar et al. 2024
 [^agarwalSYMPHONYImprovingMemory2024]: Agarwal et al. 2024
@@ -164,3 +180,7 @@ Limitations that the wiki's papers attribute to vLLM:
 [^samarinLKLossesDirect2026]: Samarin et al. 2026
 [^yuanKAIROSStatefulContextAware2026]: Yuan et al. 2026
 [^zhengSGLangEfficientExecution2024]: Zheng et al. 2024
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

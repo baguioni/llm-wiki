@@ -25,6 +25,9 @@ sources:
   - id: gaoCollaborativeSpeculativeInference
     resource: zotero://select/items/@gaoCollaborativeSpeculativeInference
     title: Collaborative Speculative Inference for Efficient LLM Inference Serving
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # Alpaca
@@ -49,6 +52,7 @@ The papers in this wiki use Alpaca as an instruction-following or chat prompt se
 | [DFlash](../papers/chenDFlashBlockDiffusion2026.md) | Chat prompt set in the same-training-data comparison with EAGLE-3 | LLaMA-3.1-8B-Instruct on SGLang | DFlash (10): 2.2× at concurrency 1, $\tau$ 3.73[^chenDFlashBlockDiffusion2026] |
 | [Speculative Speculative Decoding](../papers/kumarSpeculativeSpeculativeDecoding2026.md) | 128 prompts, 512 decoding tokens each | Llama-3.1-70B/1B and Qwen3-32B/0.6B, greedy | SSD on Llama-3.1 70B/1B: 224 tok/s, 4.10× over AR[^kumarSpeculativeSpeculativeDecoding2026] |
 | [CoSine](../papers/gaoCollaborativeSpeculativeInference.md) | One of five prompt sources; a row of the drafter specialization table | Six domain-specialized drafters | Acceptance ratio from 1.82 to 2.86 depending on the drafter[^gaoCollaborativeSpeculativeInference] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Instruction-following task for [AdaSPEC](../methods/adaspec.md) draft distillation; acceptance rate | Pythia-31M → 1.4B and CodeGen-350M → Phi-2, greedy verification | $\alpha$ 44.34% (DistillSpec) → 47.25% (Pythia, 3 epochs); 58.05% → 60.36% (CodeGen → Phi-2, optimal epochs)[^huAdaSPECSelectiveKnowledge2025] |
 
 ## Speed metrics
 
@@ -300,3 +304,4 @@ The EAGLE-3 paper measures against Huggingface.transformers and does not state t
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^kumarSpeculativeSpeculativeDecoding2026]: Kumar et al. 2026
 [^gaoCollaborativeSpeculativeInference]: Gao et al. (year not stated)
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

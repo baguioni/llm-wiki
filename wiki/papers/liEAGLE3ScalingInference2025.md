@@ -177,7 +177,7 @@ Throughput improvement with LLaMA-Instruct 3.1 8B on MT-Bench, baseline [vLLM](.
 - Builds on: [EAGLE](../methods/eagle.md), [EAGLE-2](../methods/eagle-2.md) (dynamic draft tree), [Speculative decoding](../methods/speculative-decoding.md)
 - Compared against: [HASS](../methods/hass.md), EAGLE, EAGLE-2, standard speculative sampling, PLD, Medusa, Lookahead, Hydra
 - Serving frameworks evaluated in: [SGLang](../methods/sglang.md), [vLLM](../methods/vllm.md)
-- Datasets: [MT-bench](../datasets/mt-bench.md), [HumanEval](../datasets/humaneval.md), [GSM8K](../datasets/gsm8k.md), [Alpaca](../datasets/alpaca.md), [CNN/Daily Mail](../datasets/cnn-dailymail.md), [ShareGPT](../datasets/sharegpt.md) (training)
+- Datasets: [MT-bench](../datasets/mt-bench.md), [HumanEval](../datasets/humaneval.md), [GSM8K](../datasets/gsm8k.md), [Alpaca](../datasets/alpaca.md), [CNN/Daily Mail](../datasets/cnn-dailymail.md), [ShareGPT](../datasets/sharegpt.md) (training), [UltraChat](../datasets/ultrachat.md) (training), [OpenThoughts-114k](../datasets/openthoughts.md) (training)
 - Benchmarks: [Spec-Bench](../benchmarks/spec-bench.md) (task selection follows it)
 - Papers in this wiki cited by this paper: [SGLang](zhengSGLangEfficientExecution2024.md), [SpecExec](svirschevskiSpecExecMassivelyParallel2024.md)
 

@@ -19,13 +19,16 @@ sources:
   - id: zhengSGLangEfficientExecution2024
     resource: zotero://select/items/@zhengSGLangEfficientExecution2024
     title: "SGLang: Efficient Execution of Structured Language Model Programs"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
 ---
 
 # HellaSwag
 
 ## Overview
 
-HellaSwag is described in the wiki's papers as a commonsense completion dataset[^wangEfficientOnDeviceDiffusion2026] and as a question-answering dataset for common-sense reasoning.[^muralidharanCompactLanguageModels2024] Three papers report accuracy on it.[^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangEfficientOnDeviceDiffusion2026] Two papers use it only as prompts or as a workload for speed measurements.[^yanDecodingSpeculativeDecoding2025][^zhengSGLangEfficientExecution2024]
+HellaSwag is described in the wiki's papers as a commonsense completion dataset[^wangEfficientOnDeviceDiffusion2026] and as a question-answering dataset for common-sense reasoning.[^muralidharanCompactLanguageModels2024] Four papers report accuracy on it.[^muralidharanCompactLanguageModels2024][^xiaShearedLLaMAAccelerating2024][^wangEfficientOnDeviceDiffusion2026][^elhoushiLayerSkipEnablingEarly2024] Two papers use it only as prompts or as a workload for speed measurements.[^yanDecodingSpeculativeDecoding2025][^zhengSGLangEfficientExecution2024]
 
 ## Composition
 
@@ -41,6 +44,7 @@ HellaSwag is described in the wiki's papers as a commonsense completion dataset[
 | [Wang et al. 2026](../papers/wangEfficientOnDeviceDiffusion2026.md) | Generation quality of on-device diffusion LLM inference | 200-sample subset, Q4\_0 models, temperature 0 | See the accuracy table[^wangEfficientOnDeviceDiffusion2026] |
 | [Yan et al. 2025](../papers/yanDecodingSpeculativeDecoding2025.md) | Prompts for [speculative decoding](../methods/speculative-decoding.md) throughput | Zero-shot, open-ended generation | See the speed table[^yanDecodingSpeculativeDecoding2025] |
 | [Zheng et al. 2024](../papers/zhengSGLangEfficientExecution2024.md) | Serving workload for [SGLang](../methods/sglang.md) | 20-shot, `select` primitive | Only normalized bar charts[^zhengSGLangEfficientExecution2024] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | Early exit accuracy at the last and middle layer, baseline → LayerSkip | Llama2 7B/13B, Llama3 8B, Llama3.2 1B, continual pretraining | Llama2 7B last layer 57.0 → 56.6, middle layer 31.5 → 43.8[^elhoushiLayerSkipEnablingEarly2024] |
 
 ### Protocols
 
@@ -169,3 +173,4 @@ These rows measure decoding speed with HellaSwag sentences as prompts. They are 
 [^wangEfficientOnDeviceDiffusion2026]: Wang et al. 2026
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
 [^zhengSGLangEfficientExecution2024]: Zheng et al. 2024
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024

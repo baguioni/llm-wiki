@@ -188,4 +188,9 @@ All rows: [^chengDSparkConfidenceScheduledSpeculative2026]
 - Datasets: [GSM8K](../datasets/gsm8k.md), [MATH-500](../datasets/math-500.md), [MBPP](../datasets/mbpp.md), [HumanEval](../datasets/humaneval.md), [LiveCodeBench](../datasets/livecodebench.md), [MT-Bench](../datasets/mt-bench.md), [Alpaca](../datasets/alpaca.md)
 - Papers in this wiki cited by this paper: [DFlash](chenDFlashBlockDiffusion2026.md), [EAGLE-3](liEAGLE3ScalingInference2025.md), [SGLang](zhengSGLangEfficientExecution2024.md), [Optimizing Speculative Decoding for Serving LLMs Using Goodput](240614066v2OptimizingSpeculative.md)
 
+## Open questions and results
+
+- [Choosing what to verify: Learning to Draft vs. DSpark](../analyses/choosing-what-to-verify-ltd-vs-dspark.md)
+- [Learned policy or calibrated confidence for choosing the verify set?](../questions/learned-vs-confidence-scheduled-verification.md)
+
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026

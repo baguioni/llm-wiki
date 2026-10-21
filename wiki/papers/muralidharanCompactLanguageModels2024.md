@@ -80,6 +80,7 @@ The uncompressed model is the teacher and the pruned model is the student.[^mura
 - Framework: NVIDIA Megatron-LM.[^muralidharanCompactLanguageModels2024]
 - Data: the Nemotron-4 curated 8 trillion token (8T) base pretraining dataset and the continued training dataset (CT). The 8T blend is used for all ablations and a combination of both for the final models.[^muralidharanCompactLanguageModels2024]
 - Lightweight retraining uses 1.8 billion tokens (400 steps) unless otherwise specified.[^muralidharanCompactLanguageModels2024]
+- Retraining uses the same optimizer settings and data split as Nemotron-4, with a cosine LR decay schedule from $2^{-4}$ to $4.5^{-7}$. The paper gives retraining budgets in tokens and steps, not epochs.[^muralidharanCompactLanguageModels2024]
 - Evaluation: 5-shot MMLU, 5-shot Winogrande, 25-shot ARC-Challenge, 10-shot HellaSwag, 0-shot on 20% of XL-Sum, and pass@1 for HumanEval and MBPP with temperature 0.2 and top-p $=$ 0.95.[^muralidharanCompactLanguageModels2024]
 - Compute: 16$\times$ NVIDIA DGX A100 nodes (8$\times$ A100 80GB).[^muralidharanCompactLanguageModels2024]
 
@@ -325,5 +326,11 @@ FLOPs per training step (batch size 1152) for the 15B, 8B, and 4B models are $4.
 - Pruning methods compared: [Sheared LLaMA](../methods/sheared-llama.md), [LLM-Pruner](../methods/llm-pruner.md), [SliceGPT](../methods/slicegpt.md), [LaCo](../methods/laco.md), [ShortGPT](../methods/shortgpt.md)
 - Benchmarks: [MMLU](../datasets/mmlu.md), [HellaSwag](../datasets/hellaswag.md), [GSM8K](../datasets/gsm8k.md), [HumanEval](../datasets/humaneval.md), [MBPP](../datasets/mbpp.md), [MT-Bench](../datasets/mt-bench.md), [BFCL](../benchmarks/bfcl.md)
 - Papers in this wiki cited by this paper: [Sheared LLaMA](xiaShearedLLaMAAccelerating2024.md)
+
+## Open questions and results
+
+- [Training budgets for pruning recovery and drafter distillation](../analyses/recovery-and-distillation-training-budgets.md)
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
 
 [^muralidharanCompactLanguageModels2024]: Muralidharan et al. 2024

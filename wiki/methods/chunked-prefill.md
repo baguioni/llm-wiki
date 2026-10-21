@@ -16,6 +16,9 @@ sources:
   - id: liSpecForgeFlexibleEfficient2026
     resource: zotero://select/items/@liSpecForgeFlexibleEfficient2026
     title: "SpecForge: A Flexible and Efficient Open-Source Training Framework for Speculative Decoding"
+  - id: xieNovelHatShapedDeviceCloud2025
+    resource: zotero://select/items/@xieNovelHatShapedDeviceCloud2025
+    title: A Novel Hat-Shaped Device-Cloud Collaborative Inference Framework for Large Language Models
 ---
 
 # Chunked prefill
@@ -37,6 +40,7 @@ None of the wiki's papers introduces chunked prefill. InferCept attributes it to
 | Autellix[^luoAutellixEfficientServing] | Enables it in the vLLM-opt baseline, together with prefix-caching and multi-step scheduling | Autellix reaches twice the throughput of vLLM-opt on ShareGPT and BFCL, up to 2× on LATS, and 4× on the mixed workload. The paper does not isolate the effect of chunked prefill |
 | DualPath[^wuDualPathBreakingStorage2026] | Uses it in the intra-engine scheduler of prefill engines when a request does not fit the compute quota. Also lists it among recent inference acceleration techniques | none specific to chunked prefill |
 | SpecForge[^liSpecForgeFlexibleEfficient2026] | Lists it among the system-level optimizations of SGLang that its SGLang backend reuses for target-model inference during draft training | SGLang backend up to 6.8× over the Hugging Face and custom backends. The paper does not isolate the effect of chunked prefill |
+| HAT[^xieNovelHatShapedDeviceCloud2025] | Splits long prompts on the device so that the upload of one chunk overlaps with cloud computation of the previous one, with the chunk size set per device. The U-Sarathi baseline chunks prompts on the server without that overlap | Prompt chunking lowers SpecBench TTFT from 655.3 to 384.3 ms in the ablation |
 
 ## Related
 
@@ -47,3 +51,4 @@ None of the wiki's papers introduces chunked prefill. InferCept attributes it to
 [^luoAutellixEfficientServing]: Luo et al.
 [^wuDualPathBreakingStorage2026]: Wu et al. 2026
 [^liSpecForgeFlexibleEfficient2026]: Li et al. 2026
+[^xieNovelHatShapedDeviceCloud2025]: Xie et al. 2025

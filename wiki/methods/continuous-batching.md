@@ -31,6 +31,9 @@ sources:
   - id: kumarSpeculativeSpeculativeDecoding2026
     resource: zotero://select/items/@kumarSpeculativeSpeculativeDecoding2026
     title: Speculative Speculative Decoding
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # Continuous batching
@@ -55,11 +58,13 @@ None of the wiki's papers introduces continuous batching, and most name it witho
 | SSD / Saguaro[^kumarSpeculativeSpeculativeDecoding2026] | The custom inference engine incorporates continuous batching | none specific to continuous batching |
 | SAGA[^guoSAGAWorkflowAtomicScheduling2026] | Cited as background on LLM serving systems | none |
 | MORI[^xiaIdlenessRelativeExploiting2026] | Cited as background on LLM serving | none |
+| I-DLM[^yuIntrospectiveDiffusionLanguage2026] | Continuous batching works unmodified because every ISD step yields at least one token per request, so all requests advance uniformly. In block diffusion, tokens in a block converge at different rates and requests must synchronize at the slowest block, which the paper says breaks continuous batching | At batch size 8, throughput grows with tokens per forward at a slope of 549 for I-DLM against 84 for SDAR |
 
 ## Strengths & Limitations
 
 - vLLM does not benefit from continuous batching during the pre-fill phase, because prefill throughput stays constant as batch size increases.[^agarwalSYMPHONYImprovingMemory2024]
 - SAGA states that batching decisions in existing serving systems ignore session affinity.[^guoSAGAWorkflowAtomicScheduling2026]
+- Diffusion LLMs that denoise a block for a variable number of steps do not fit it: I-DLM argues that block diffusion requests must wait for the slowest block in the batch.[^yuIntrospectiveDiffusionLanguage2026]
 
 # Contradictions
 
@@ -68,7 +73,7 @@ The papers attribute the origin of continuous batching differently. MORI states 
 ## Related
 
 - [vLLM](vllm.md), [SGLang](sglang.md), [PagedAttention](paged-attention.md), [Chunked prefill](chunked-prefill.md), [RadixAttention](radix-attention.md), [KV cache](kv-cache.md)
-- Papers: [SGLang](../papers/zhengSGLangEfficientExecution2024.md), [Symphony](../papers/agarwalSYMPHONYImprovingMemory2024.md), [Parrot](../papers/linParrotEfficientServing2024.md), [CoSine](../papers/gaoCollaborativeSpeculativeInference.md), [InferCept](../papers/abhyankarInferCeptEfficientIntercept2024.md), [Autellix](../papers/luoAutellixEfficientServing.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [MORI](../papers/xiaIdlenessRelativeExploiting2026.md)
+- Papers: [SGLang](../papers/zhengSGLangEfficientExecution2024.md), [Symphony](../papers/agarwalSYMPHONYImprovingMemory2024.md), [Parrot](../papers/linParrotEfficientServing2024.md), [CoSine](../papers/gaoCollaborativeSpeculativeInference.md), [InferCept](../papers/abhyankarInferCeptEfficientIntercept2024.md), [Autellix](../papers/luoAutellixEfficientServing.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [MORI](../papers/xiaIdlenessRelativeExploiting2026.md), [I-DLM](../papers/yuIntrospectiveDiffusionLanguage2026.md)
 
 [^agarwalSYMPHONYImprovingMemory2024]: Agarwal et al. 2024
 [^gaoCollaborativeSpeculativeInference]: Gao et al. (year not stated)
@@ -79,3 +84,4 @@ The papers attribute the origin of continuous batching differently. MORI states 
 [^guoSAGAWorkflowAtomicScheduling2026]: Guo et al. 2026
 [^xiaIdlenessRelativeExploiting2026]: Xia et al. 2026
 [^kumarSpeculativeSpeculativeDecoding2026]: Kumar et al. 2026
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

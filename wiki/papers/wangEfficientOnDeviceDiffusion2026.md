@@ -174,4 +174,9 @@ On SM8750 with a fixed 128-token workload, llada.cpp reduces both average power 
 - Related systems named by the paper: [llm.npu](../methods/llm-npu.md), [HeteroLLM](../methods/heterollm.md), [Fast-dLLM](../methods/fast-dllm.md)
 - Datasets: [GSM8K](../datasets/gsm8k.md), [BoolQ](../datasets/boolq.md), [ARC-C](../datasets/arc-c.md), [HellaSwag](../datasets/hellaswag.md)
 
+## Open questions and results
+
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^wangEfficientOnDeviceDiffusion2026]: Wang et al. 2026

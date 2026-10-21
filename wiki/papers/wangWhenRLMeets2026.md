@@ -185,4 +185,9 @@ Internal inconsistencies in the source text (all from the same version):
 - Datasets: [GSM8K](../datasets/gsm8k.md), [Spider](../datasets/spider.md), [CodeSearchNet](../datasets/codesearchnet.md), [Finance-Alpaca](../datasets/finance-alpaca.md), [chatbot_instruction_prompts](../datasets/chatbot-instruction-prompts.md)
 - Papers in this wiki cited by this paper: [EAGLE-3](liEAGLE3ScalingInference2025.md), [SGLang](zhengSGLangEfficientExecution2024.md)
 
+## Open questions and results
+
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^wangWhenRLMeets2026]: Wang et al. 2026

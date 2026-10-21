@@ -22,6 +22,15 @@ sources:
   - id: chengDSparkConfidenceScheduledSpeculative2026
     resource: zotero://select/items/@chengDSparkConfidenceScheduledSpeculative2026
     title: "DSpark: Confidence-Scheduled Speculative Decoding with Semi-Autoregressive Generation"
+  - id: xieNovelHatShapedDeviceCloud2025
+    resource: zotero://select/items/@xieNovelHatShapedDeviceCloud2025
+    title: A Novel Hat-Shaped Device-Cloud Collaborative Inference Framework for Large Language Models
+  - id: anPARDAcceleratingLLM2025
+    resource: zotero://select/items/@anPARDAcceleratingLLM2025
+    title: "PARD: Accelerating LLM Inference with Low-Cost PARallel Draft Model Adaptation"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
 ---
 
 # Medusa
@@ -82,6 +91,20 @@ All rows: [^samarinLKLossesDirect2026]
 - CoSine discusses Medusa as a self-speculation method in related work and does not benchmark it.[^gaoCollaborativeSpeculativeInference]
 - SDFP excludes Medusa and EAGLE from its comparison, because they require additional auxiliary networks or fine-tuning.[^weiSDFPSpeculativeDecoding2026]
 
+### HAT (Xie et al. 2025)
+
+- [HAT](../papers/xieNovelHatShapedDeviceCloud2025.md) runs Medusa inside U-shaped device-cloud inference as the U-Medusa baseline: 4 heads on the device with the input and output submodels, and tree verification of size 8. The heads are trained on ShareGPT.[^xieNovelHatShapedDeviceCloud2025]
+- With speculative decoding alone on one device, U-Medusa has 591M trained parameters, an accept length of 1.89, and a 1.41× speedup over U-shape on SpecBench (Vicuna-7B), against 67M, 2.06, and 1.65× for HAT. On CNN/DM (Vicuna-13B) the values are 760M, 1.75, and 1.45× against 105M, 1.98, and 1.60×.[^xieNovelHatShapedDeviceCloud2025]
+- As the request rate rises from 4 to 9 requests/s on SpecBench, U-Medusa's TBT rises by 64.5%, which the paper attributes to tree verification overloading the server.[^xieNovelHatShapedDeviceCloud2025]
+
+### PARD (An et al. 2025)
+
+PARD classes Medusa as target-dependent, because it feeds target features into the drafter, so a separate drafter must be trained for every target.[^anPARDAcceleratingLLM2025]
+
+### HyCo ([HyCo](../papers/baeHyCoHybridDrafting2026.md))
+
+HyCo describes Medusa's typical acceptance as testing the target's raw softmax against an entropy-adaptive threshold taken from $\eta$-sampling, a lossy acceptance rule. On HyCo's hybrid tree on UC-val, typical acceptance at its defaults falls below the lossless judge-score range (58.7–63.0), and HyCo uses its own $\epsilon$-threshold rule instead. See [Lossy acceptance rules](lossy-acceptance.md).[^baeHyCoHybridDrafting2026]
+
 ## Strengths & Limitations
 
 - Strength: no independent draft model and no second KV-cache.[^liSpecForgeFlexibleEfficient2026]
@@ -98,6 +121,8 @@ Caveat on the numbers: the two sets of Medusa measurements use different targets
 
 ## Related
 
+- [Lossy acceptance rules](lossy-acceptance.md) (typical acceptance), [HyCo](hyco.md)
+
 - Parent concept: [Speculative decoding](../methods/speculative-decoding.md), [Tree-based speculation](../methods/tree-based-speculation.md)
 - Other drafters that reuse target features: [EAGLE](../methods/eagle.md), [EAGLE-2](../methods/eagle-2.md), [EAGLE-3](../methods/eagle-3.md), [Multi-token prediction](../methods/multi-token-prediction.md)
 - Parallel drafters: [DFlash](../methods/dflash.md), [DSpark](../methods/dspark.md)
@@ -109,3 +134,6 @@ Caveat on the numbers: the two sets of Medusa measurements use different targets
 [^gaoCollaborativeSpeculativeInference]: Gao et al. (year not stated)
 [^weiSDFPSpeculativeDecoding2026]: Wei et al. 2026
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
+[^xieNovelHatShapedDeviceCloud2025]: Xie et al. 2025
+[^anPARDAcceleratingLLM2025]: An et al. 2025
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026

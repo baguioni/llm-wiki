@@ -37,6 +37,12 @@ sources:
   - id: xiaIdlenessRelativeExploiting2026
     resource: zotero://select/items/@xiaIdlenessRelativeExploiting2026
     title: "Idleness Is Relative: Exploiting Tool-Call Idle Windows for Offloading in Agentic Systems with MORI"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # SGLang
@@ -104,6 +110,8 @@ Role is one of: *baseline* (the paper compares against SGLang), *built on* (the 
 | Aurora[^wangWhenRLMeets2026] | built on | An SGLang speculative decoding engine is Aurora's inference server, and SGLang replicas are the actors of its training loop | 1.5× day-0 speedup; 1.57× to 1.25× across batch sizes for MiniMax M2.1, relative to serving without speculation | MiniMax M2.1 229B and Qwen3-Coder-Next 80B on H200 GPUs |
 | DualPath[^wuDualPathBreakingStorage2026] | baseline | SGL(MC), commit 19089aa | No headline number. The paper states that comparing DualPath with SGL(MC) is unfair because of implementation differences | SGL(MC) uses 1.5TB DRAM on every node and failed to complete some large configurations |
 | MORI[^xiaIdlenessRelativeExploiting2026] | built on, baseline | v0.5.10. MORI adds 500 lines to SGLang's cache subsystem via HiCache. Baseline: SGLang Model Gateway (SMG) | 1.6–2.1× higher output throughput than SMG and ThunderAgent at 80 programs. Example: 853 tokens/s for MORI against 447 tokens/s for SMG on H200 (80 GB) with a 7B model; 189 against 96 tokens/s on B200 with a 70B model | Replayed Claude Code traces, single replica |
+| Osprey[^bieOspreyTargetagnosticPretraining2026] | host | batch=1, steps=5, topk=1, draft_tokens=6, max_tokens=4096; training built in SpecForge on SGLang | Osprey 270 tokens/s against 217 for EAGLE-3 on Qwen3-8B at batch size 1 | One H100 for Qwen3-8B; 4 B200 with FP8 for MiniMax-M2.5 |
+| I-DLM[^yuIntrospectiveDiffusionLanguage2026] | built on | Drop-in extension: each ISD step is an SGLang *extend* of $2N-1$ tokens with CUDA graph capture, a paged-only attention kernel, a stationary-batch decode loop, and a fused Triton verify kernel; disable-radix-cache=true, FlashInfer, mem-fraction-static 0.85 | Full system 2.1–2.5× over the naive integration at concurrency 1, 8, 32. Against [EAGLE-3](eagle-3.md) in SGLang on Qwen3-8B: 341 vs 238 tok/s per request on MATH-500 at concurrency 1 | One H100 per 8B server, two for 32B; Qwen3-8B and Qwen3-32B converted to I-DLM |
 
 ## Strengths & Limitations
 
@@ -126,8 +134,8 @@ Role is one of: *baseline* (the paper compares against SGLang), *built on* (the 
 
 - Mechanisms: [RadixAttention](radix-attention.md), [KV cache](kv-cache.md), [Prefix caching](prefix-caching.md), [Continuous batching](continuous-batching.md), [PagedAttention](paged-attention.md), [KV cache offloading](kv-cache-offloading.md)
 - Other engines and systems: [vLLM](vllm.md), [ThunderAgent](thunderagent.md), [LMCache](lmcache.md)
-- Speculative decoding methods deployed on it: [EAGLE-3](eagle-3.md), [DFlash](dflash.md), [Speculative decoding](speculative-decoding.md)
-- Papers: [SGLang](../papers/zhengSGLangEfficientExecution2024.md), [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [ThunderAgent](../papers/kangThunderAgentSimpleFast2026.md), [SpecForge](../papers/liSpecForgeFlexibleEfficient2026.md), [EAGLE-3](../papers/liEAGLE3ScalingInference2025.md), [Leyline](../papers/maLeylineKVCache2026.md), [Aurora](../papers/wangWhenRLMeets2026.md), [DualPath](../papers/wuDualPathBreakingStorage2026.md), [MORI](../papers/xiaIdlenessRelativeExploiting2026.md)
+- Speculative decoding methods deployed on it: [EAGLE-3](eagle-3.md), [DFlash](dflash.md), [I-DLM](i-dlm.md), [Speculative decoding](speculative-decoding.md)
+- Papers: [SGLang](../papers/zhengSGLangEfficientExecution2024.md), [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [SAGA](../papers/guoSAGAWorkflowAtomicScheduling2026.md), [SSD](../papers/kumarSpeculativeSpeculativeDecoding2026.md), [ThunderAgent](../papers/kangThunderAgentSimpleFast2026.md), [SpecForge](../papers/liSpecForgeFlexibleEfficient2026.md), [EAGLE-3](../papers/liEAGLE3ScalingInference2025.md), [Leyline](../papers/maLeylineKVCache2026.md), [Aurora](../papers/wangWhenRLMeets2026.md), [DualPath](../papers/wuDualPathBreakingStorage2026.md), [MORI](../papers/xiaIdlenessRelativeExploiting2026.md), [I-DLM](../papers/yuIntrospectiveDiffusionLanguage2026.md)
 
 [^zhengSGLangEfficientExecution2024]: Zheng et al. 2024
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
@@ -140,3 +148,5 @@ Role is one of: *baseline* (the paper compares against SGLang), *built on* (the 
 [^wangWhenRLMeets2026]: Wang et al. 2026
 [^wuDualPathBreakingStorage2026]: Wu et al. 2026
 [^xiaIdlenessRelativeExploiting2026]: Xia et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

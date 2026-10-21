@@ -13,13 +13,19 @@ sources:
   - id: liSpecForgeFlexibleEfficient2026
     resource: zotero://select/items/@liSpecForgeFlexibleEfficient2026
     title: "SpecForge: A Flexible and Efficient Open-Source Training Framework for Speculative Decoding"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # LiveCodeBench
 
 ## Overview
 
-Three speculative-decoding papers in this wiki use LiveCodeBench (abbreviated LCB) as a code prompt set for measuring speedup, acceptance length, and serving throughput.[^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liSpecForgeFlexibleEfficient2026] None of them reports task accuracy on it.
+Three speculative-decoding papers in this wiki use LiveCodeBench (abbreviated LCB) as a code prompt set for measuring speedup, acceptance length, and serving throughput.[^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liSpecForgeFlexibleEfficient2026] None of them reports task accuracy on it. I-DLM reports pass@1 on LCB-v6 for a diffusion LM against its AR base.[^yuIntrospectiveDiffusionLanguage2026]
 
 ## Composition
 
@@ -32,6 +38,8 @@ The papers do not describe the dataset's size, splits, or format. They place it 
 | [DFlash](../papers/chenDFlashBlockDiffusion2026.md) | Code prompt set for speedup and $\tau$; SGLang serving with a coder model | Qwen3-4B and 8B on Transformers; Qwen3-Coder-30B-A3B on SGLang | DFlash (16) on Q3-8B at temperature 0: 5.51×, $\tau$ 7.27[^chenDFlashBlockDiffusion2026] |
 | [DSpark](../papers/chengDSparkConfidenceScheduledSpeculative2026.md) | Code prompt set for accepted length | Qwen3-4B, 8B, 14B, Gemma4-12B; temperature 1.0 | DSpark $\tau$ from 4.51 to 5.17 across the four targets[^chengDSparkConfidenceScheduledSpeculative2026] |
 | [SpecForge](../papers/liSpecForgeFlexibleEfficient2026.md) | Coding prompt set for serving throughput with EAGLE3 draft models | Seven targets on SGLang | SpecBundle on Llama-4-Scout: speedup 4.48, the highest in the paper[^liSpecForgeFlexibleEfficient2026] |
+| [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md) | 64 prompts for accepted length and throughput | MiniMax-M2.5, SGLang, FP8 on 4 B200 | AL 3.779 for Osprey against 2.508 for EAGLE-3[^bieOspreyTargetagnosticPretraining2026] |
+| [Yu et al. 2026](../papers/yuIntrospectiveDiffusionLanguage2026.md) | Accuracy of [I-DLM](../methods/i-dlm.md) (LCB-v6) | Qwen3 chat template with thinking, temperature 1.0, three runs; 175 problems, pass@1 | I-DLM-8B 45.7 vs Qwen3-8B 50.3; LLaDA-2.1-mini (16B) 30.4; I-DLM-32B 57.1[^yuIntrospectiveDiffusionLanguage2026] |
 
 ## Speed metrics
 
@@ -160,3 +168,5 @@ The settings differ in ways that the papers state. The DFlash paper runs the Tra
 [^chenDFlashBlockDiffusion2026]: Chen et al. 2026
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
 [^liSpecForgeFlexibleEfficient2026]: Li et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

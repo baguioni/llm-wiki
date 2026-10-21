@@ -205,4 +205,11 @@ Mean over the four tasks. All rows: [^zhangLearningDraftAdaptive2026]
 - Datasets: [HumanEval](../datasets/humaneval.md), [MT-bench](../datasets/mt-bench.md), [GSM8K](../datasets/gsm8k.md), [Alpaca](../datasets/alpaca.md), [Natural Questions](../datasets/natural-questions.md), [MMLU](../datasets/mmlu.md)
 - Papers in this wiki cited by this paper: [EAGLE-3](liEAGLE3ScalingInference2025.md), [DistillSpec](zhouDistillSpecImprovingSpeculative2024.md)
 
+## Open questions and results
+
+- [Choosing what to verify: Learning to Draft vs. DSpark](../analyses/choosing-what-to-verify-ltd-vs-dspark.md)
+- [Learned policy or calibrated confidence for choosing the verify set?](../questions/learned-vs-confidence-scheduled-verification.md)
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^zhangLearningDraftAdaptive2026]: Zhang et al. 2026

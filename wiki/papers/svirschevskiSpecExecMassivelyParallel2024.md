@@ -173,5 +173,6 @@ SL-1.3B draft, Vicuna-33B target, SpecExec, budget 128.[^svirschevskiSpecExecMas
 - Methods compared against: [SpecInfer](../methods/specinfer.md), [Sequoia](../methods/sequoia.md)
 - Datasets: [OpenAssistant Conversations (OASST1)](../datasets/oasst1.md), [MT-Bench](../datasets/mt-bench.md), [C4](../datasets/c4.md), [WikiText-2](../datasets/wikitext-2.md)
 - Papers in this wiki cited by this paper: [Sheared LLaMA](xiaShearedLLaMAAccelerating2024.md)
+- Analysis: [Quantization of the target and the draft in speculative decoding](../analyses/quantization-in-speculative-decoding.md)
 
 [^svirschevskiSpecExecMassivelyParallel2024]: Svirschevski et al. 2024

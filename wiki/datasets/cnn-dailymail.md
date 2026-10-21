@@ -16,6 +16,18 @@ sources:
   - id: yanDecodingSpeculativeDecoding2025
     resource: zotero://select/items/@yanDecodingSpeculativeDecoding2025
     title: Decoding Speculative Decoding
+  - id: xieNovelHatShapedDeviceCloud2025
+    resource: zotero://select/items/@xieNovelHatShapedDeviceCloud2025
+    title: A Novel Hat-Shaped Device-Cloud Collaborative Inference Framework for Large Language Models
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # CNN/Daily Mail
@@ -24,7 +36,7 @@ Also written CNN/DM and CNNDM in the sources.[^zhouDistillSpecImprovingSpeculati
 
 ## Overview
 
-CNN/Daily Mail is a text summarization dataset.[^zhouDistillSpecImprovingSpeculative2024] All four papers that use it in the wiki are [speculative decoding](../methods/speculative-decoding.md) papers, and they use it as the summarization task for measuring decoding speedup.[^zhouDistillSpecImprovingSpeculative2024][^liEAGLE3ScalingInference2025][^weiSDFPSpeculativeDecoding2026][^yanDecodingSpeculativeDecoding2025]
+CNN/Daily Mail is a text summarization dataset.[^zhouDistillSpecImprovingSpeculative2024] All the papers that use it in the wiki are [speculative decoding](../methods/speculative-decoding.md) papers, and they use it as the summarization task for measuring decoding speedup or acceptance rate.[^zhouDistillSpecImprovingSpeculative2024][^liEAGLE3ScalingInference2025][^weiSDFPSpeculativeDecoding2026][^yanDecodingSpeculativeDecoding2025][^elhoushiLayerSkipEnablingEarly2024][^huAdaSPECSelectiveKnowledge2025]
 
 ## Composition
 
@@ -39,6 +51,10 @@ CNN/Daily Mail is a text summarization dataset.[^zhouDistillSpecImprovingSpecula
 | [Li et al. 2025](../papers/liEAGLE3ScalingInference2025.md) | Summarization task of the [EAGLE-3](../methods/eagle-3.md) evaluation | Vicuna 13B, LLaMA-Instruct 3.1 8B, LLaMA-Instruct 3.3 70B, DeepSeek-R1-Distill-LLaMA 8B | See the speed table[^liEAGLE3ScalingInference2025] |
 | [Wei et al. 2026](../papers/weiSDFPSpeculativeDecoding2026.md) | Summarization task of the SDFP evaluation | LLaMA-2-13B, LLaMA-2-13B-Chat, LLaMA-2-70B; 1-shot, greedy | See the speed table[^weiSDFPSpeculativeDecoding2026] |
 | [Yan et al. 2025](../papers/yanDecodingSpeculativeDecoding2025.md) | Comparison against self-speculative decoding | LLaMa-2-70B target, greedy sampling | See the speed table[^yanDecodingSpeculativeDecoding2025] |
+| [HAT](../papers/xieNovelHatShapedDeviceCloud2025.md) | Long-prompt workload for device-cloud TTFT and TBT | Vicuna-13B, Jetson devices on WiFi, 8 A6000 cloud | At 4 requests/s, TTFT 1027.4 ms for HAT against 1750.6 ms, 2214.8 ms, and 2140.8 ms for the baselines[^xieNovelHatShapedDeviceCloud2025] |
+| [HyCo](../papers/baeHyCoHybridDrafting2026.md) | Summarization task inside Spec-Bench; ROUGE-L as a quality check on lossy acceptance | Gemma 4 26B-A4B, temperature 1, first HyCo generation | ROUGE-L 19.2 for HyCo against 19.8 for server-side MTP[^baeHyCoHybridDrafting2026] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | One-shot summarization for [LayerSkip](../methods/layerskip.md) self-speculative decoding; ROUGE-2 | Llama2 7B and 13B continually pretrained, Llama2 1.5B and 7B pretrained from scratch; H100, greedy | 1.86× (7B), 1.81× (13B), 2.16× (7B from scratch) over autoregressive; Draft & Verify 1.56× on 13B[^elhoushiLayerSkipEnablingEarly2024] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Summarization task for [AdaSPEC](../methods/adaspec.md) draft distillation; acceptance rate; vLLM speed | Pythia-31M → 1.4B and CodeGen-350M → Phi-2, greedy verification | $\alpha$ 73.05% (DistillSpec) → 74.22% (Pythia, 3 epochs); 248.49 → 283.50 tokens/s on one A100[^huAdaSPECSelectiveKnowledge2025] |
 
 ### Protocols
 
@@ -49,7 +65,7 @@ CNN/Daily Mail is a text summarization dataset.[^zhouDistillSpecImprovingSpecula
 
 ### Task quality
 
-No ROUGE value for CNN/Daily Mail is given in the text or tables of the wiki's papers.
+HyCo is the only paper in the wiki that gives a ROUGE value for CNN/Daily Mail in its text: ROUGE-L 19.2 for HyCo against 19.8 for server-side MTP self-speculation, a single-generation descriptive comparison.[^baeHyCoHybridDrafting2026]
 
 - Zhou et al. report ROUGE-2 on CNN/DM only in figures.[^zhouDistillSpecImprovingSpeculative2024]
 - Li et al. do not evaluate generation quality, because EAGLE-3 does not modify the target model's weights and uses strict speculative sampling acceptance conditions.[^liEAGLE3ScalingInference2025]
@@ -149,3 +165,7 @@ LLaMa-2-70B target, greedy sampling. The source gives the speedup as a percentag
 [^liEAGLE3ScalingInference2025]: Li et al. 2025
 [^weiSDFPSpeculativeDecoding2026]: Wei et al. 2026
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
+[^xieNovelHatShapedDeviceCloud2025]: Xie et al. 2025
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

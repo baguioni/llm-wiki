@@ -82,6 +82,7 @@ The DSpark paper summarizes its Qwen3-8B macro-average gain in accepted length a
 
 - [EAGLE-3](../methods/eagle-3.md), [DFlash](../methods/dflash.md), [DSpark](../methods/dspark.md), [KV injection](../methods/kv-injection.md), [Speculative decoding](../methods/speculative-decoding.md)
 - [GSM8K](../datasets/gsm8k.md)
+- [Why parallel drafters beat EAGLE-3](why-parallel-drafters-beat-eagle-3.md)
 - Papers: [EAGLE-3](../papers/liEAGLE3ScalingInference2025.md), [DFlash](../papers/chenDFlashBlockDiffusion2026.md), [DSpark](../papers/chengDSparkConfidenceScheduledSpeculative2026.md), [DPara](../papers/liuWhenParallelDrafter2026.md)
 
 [^liEAGLE3ScalingInference2025]: Li et al. 2025

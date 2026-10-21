@@ -10,13 +10,22 @@ sources:
   - id: yanDecodingSpeculativeDecoding2025
     resource: zotero://select/items/@yanDecodingSpeculativeDecoding2025
     title: Decoding Speculative Decoding
+  - id: agarwalOnPolicyDistillationLanguage2024
+    resource: zotero://select/items/@agarwalOnPolicyDistillationLanguage2024
+    title: "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # XSum
 
 ## Overview
 
-The Extreme Summarization (XSum) dataset is an evaluation benchmark for abstractive single-document summarization systems.[^zhouDistillSpecImprovingSpeculative2024] In the wiki it is used by two [speculative decoding](../methods/speculative-decoding.md) papers: one studies draft model distillation on it,[^zhouDistillSpecImprovingSpeculative2024] and one uses it to compare a pruned draft model against self-speculative decoding.[^yanDecodingSpeculativeDecoding2025]
+The Extreme Summarization (XSum) dataset is an evaluation benchmark for abstractive single-document summarization systems.[^zhouDistillSpecImprovingSpeculative2024] In the wiki it is used by [speculative decoding](../methods/speculative-decoding.md) papers that study draft model distillation on it,[^zhouDistillSpecImprovingSpeculative2024][^huAdaSPECSelectiveKnowledge2025] by papers that compare drafts against self-speculative decoding or measure self-speculation on it,[^yanDecodingSpeculativeDecoding2025][^elhoushiLayerSkipEnablingEarly2024] and by GKD as a summarization task for distilling T5 students.[^agarwalOnPolicyDistillationLanguage2024]
 
 ## Composition
 
@@ -30,6 +39,9 @@ The Extreme Summarization (XSum) dataset is an evaluation benchmark for abstract
 |---|---|---|---|
 | [Zhou et al. 2024](../papers/zhouDistillSpecImprovingSpeculative2024.md) | Block efficiency, speedup, and ROUGE-2 of [DistillSpec](../methods/distillspec.md); distillation recipe study | T5-XL (3B) target, T5-Small (77M) draft; T5 model garden | See the quality and speed tables[^zhouDistillSpecImprovingSpeculative2024] |
 | [Yan et al. 2025](../papers/yanDecodingSpeculativeDecoding2025.md) | Comparison against self-speculative decoding | LLaMa-2-70B target, greedy sampling | See the speed table[^yanDecodingSpeculativeDecoding2025] |
+| [Agarwal et al. 2024](../papers/agarwalOnPolicyDistillationLanguage2024.md) | Task-specific [GKD](../methods/gkd.md) of T5 students; ROUGE-2 on the validation split | Supervised fine-tuned T5-XL teacher, T5-small/base/large students; max input 1024, output 64 | Before distillation (greedy): teacher 22, students 13.4 / 17.9 / 19.6. On-policy GKD on 5% of the inputs beats supervised KD and ImitKD on the full data[^agarwalOnPolicyDistillationLanguage2024] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | 0-shot summarization for [LayerSkip](../methods/layerskip.md) self-speculative decoding; ROUGE-2 | Llama2 7B and 13B continually pretrained, H100, greedy | 1.54× (7B, $E=8$) and 1.34× (13B, $E=15$) over autoregressive; Draft & Verify 1.48× on 13B[^elhoushiLayerSkipEnablingEarly2024] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Summarization task for [AdaSPEC](../methods/adaspec.md) draft distillation; acceptance rate $\alpha$ | Pythia-31M → 1.4B and CodeGen-350M → Phi-2, greedy verification | $\alpha$ 47.24% (DistillSpec) → 49.11% (Pythia, 3 epochs); 66.78% → 68.19% (CodeGen → Phi-2, optimal epochs)[^huAdaSPECSelectiveKnowledge2025] |
 
 ### Protocols
 
@@ -93,3 +105,6 @@ LLaMa-2-70B target, greedy sampling. The source gives the speedup as a percentag
 
 [^zhouDistillSpecImprovingSpeculative2024]: Zhou et al. 2024
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
+[^agarwalOnPolicyDistillationLanguage2024]: Agarwal et al. 2024
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

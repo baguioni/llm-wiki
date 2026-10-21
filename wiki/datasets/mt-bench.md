@@ -37,6 +37,21 @@ sources:
   - id: oliaroSuffixDecodingExtremeSpeculative2024
     resource: zotero://select/items/@oliaroSuffixDecodingExtremeSpeculative2024
     title: "SuffixDecoding: Extreme Speculative Decoding for Emerging AI Applications"
+  - id: anPARD2TargetAlignedParallel2026
+    resource: zotero://select/items/@anPARD2TargetAlignedParallel2026
+    title: "PARD-2: Target-Aligned Parallel Draft Model for Dual-Mode Speculative Decoding"
+  - id: bieOspreyTargetagnosticPretraining2026
+    resource: zotero://select/items/@bieOspreyTargetagnosticPretraining2026
+    title: "Osprey: Target-Agnostic Pre-Training Makes Stronger Drafters in Speculative Decoding"
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
 ---
 
 # MT-Bench
@@ -66,6 +81,11 @@ The papers in this wiki use MT-Bench as their multi-turn conversation or chat wo
 | [SpecExec](../papers/svirschevskiSpecExecMassivelyParallel2024.md) | 100-prompt subsample for offloaded inference speed; draft-budget study | Llama 2-7B / 70B and Llama 3-8B / 70B | SpecExec on Llama 3-8B / 70B at $t=0$: 21.58 accepted tokens per iteration, 17.5x[^svirschevskiSpecExecMassivelyParallel2024] |
 | [SuffixDecoding](../papers/oliaroSuffixDecodingExtremeSpeculative2024.md) | Indirectly: eight MT-Bench categories are part of the Spec-Bench workload | Llama-3.1-8B-Instruct | Reported per Spec-Bench category, see [Spec-Bench](../benchmarks/spec-bench.md)[^oliaroSuffixDecodingExtremeSpeculative2024] |
 | [Minitron](../papers/muralidharanCompactLanguageModels2024.md) | MT-Bench score of instruction-tuned small models | Minitron 4B-instruct and five baselines | Minitron 4B-instruct: 6.46[^muralidharanCompactLanguageModels2024] |
+| [PARD-2](../papers/anPARD2TargetAlignedParallel2026.md) | Multi-turn dialogue task for speedup and $\tau$, and ablations | Qwen3-8B, 14B, 32B, Llama3.1-8B; vLLM, temperature 0 | PARD-2 on Qwen3-14B: 3.37, $\tau$ 3.96[^anPARD2TargetAlignedParallel2026] |
+| [Osprey](../papers/bieOspreyTargetagnosticPretraining2026.md) | 64 prompts for accepted length and throughput | MiniMax-M2.5, SGLang, FP8 on 4 B200 | AL 2.805 for Osprey against 2.868 for EAGLE-3, the one benchmark where EAGLE-3 is ahead[^bieOspreyTargetagnosticPretraining2026] |
+| [Lever](../papers/wangLeverSpeculativeLLM2026a.md) | Decoding workload, 50 samples, up to 128 output tokens | Four targets on three Snapdragon phones, greedy | Lever's gains are smaller here; Qwen3-14B on Honor 500 Pro: 0.71 tokens/s[^wangLeverSpeculativeLLM2026a] |
+| [HyCo](../papers/baeHyCoHybridDrafting2026.md) | Both MT-bench turns inside SB-480 for efficiency; first turns judged by GPT-5.4 | Gemma 4 26B-A4B, temperature 1, drafters on a Galaxy S26 Ultra | MT-bench judge difference HyCo − Cloud+MTP: −0.2 (95% CI −1.9 to +1.4)[^baeHyCoHybridDrafting2026] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Evaluation of [EAGLE](../methods/eagle.md) trained with [AdaSPEC](../methods/adaspec.md) | Vicuna-7B-v1.3 | 63.48 → 68.21 tokens/s; 8.85 → 8.06 s per sentence[^huAdaSPECSelectiveKnowledge2025] |
 
 ## Speed metrics
 
@@ -600,3 +620,8 @@ The EAGLE-3 paper measures against Huggingface.transformers and does not state t
 [^svirschevskiSpecExecMassivelyParallel2024]: Svirschevski et al. 2024
 [^muralidharanCompactLanguageModels2024]: Muralidharan et al. 2024
 [^oliaroSuffixDecodingExtremeSpeculative2024]: Oliaro et al. 2024
+[^anPARD2TargetAlignedParallel2026]: An et al. 2026
+[^bieOspreyTargetagnosticPretraining2026]: Bie et al. 2026
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025

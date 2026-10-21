@@ -19,6 +19,12 @@ sources:
   - id: parkSpecEdgeScalableEdgeAssisted2025
     resource: zotero://select/items/@parkSpecEdgeScalableEdgeAssisted2025
     title: "SpecEdge: Scalable Edge-Assisted Serving Framework for Interactive LLMs"
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: baeHyCoHybridDrafting2026
+    resource: zotero://select/items/@baeHyCoHybridDrafting2026
+    title: "HyCo: Hybrid Drafting for Cost-Efficient Mobile-Cloud Speculative Decoding"
 ---
 
 # SpecInfer
@@ -87,6 +93,14 @@ The paper implements speculative decoding in the Microsoft Deepspeed library wit
 - The SuffixDecoding paper states that EAGLE-3 and Token Recycling both leverage tree speculation, citing SpecInfer.[^oliaroSuffixDecodingExtremeSpeculative2024]
 - The SpecEdge paper states that its design is compatible with tree-based methods including SpecInfer.[^parkSpecEdgeScalableEdgeAssisted2025]
 
+### [Lever](../papers/wangLeverSpeculativeLLM2026a.md): tree-construction baseline on phones
+
+SpecInfer's tree construction is a baseline in Lever's ablation on a OnePlus 12, with only the construction policy changed. Lever's geometric-mean throughput is 1.11x and its accepted length 1.10x relative to SpecInfer.[^wangLeverSpeculativeLLM2026a]
+
+### [HyCo](../papers/baeHyCoHybridDrafting2026.md): tree attention mask
+
+HyCo cites SpecInfer for tree verification: a tree offers alternative tokens at each position and is verified in one pass. Its verifier checks the 32-node hybrid draft tree in one forward pass with a tree attention mask.[^baeHyCoHybridDrafting2026]
+
 ## Strengths & Limitations
 
 - SpecInfer spreads a large draft budget over a tree, which avoids wasting the budget on one long sequence that is truncated at the first rejection.[^svirschevskiSpecExecMassivelyParallel2024]
@@ -103,3 +117,5 @@ The paper implements speculative decoding in the Microsoft Deepspeed library wit
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
 [^oliaroSuffixDecodingExtremeSpeculative2024]: Oliaro et al. 2024
 [^parkSpecEdgeScalableEdgeAssisted2025]: Park et al. 2025
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^baeHyCoHybridDrafting2026]: Bae et al. 2026

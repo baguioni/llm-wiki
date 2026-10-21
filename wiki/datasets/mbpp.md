@@ -19,13 +19,25 @@ sources:
   - id: muralidharanCompactLanguageModels2024
     resource: zotero://select/items/@muralidharanCompactLanguageModels2024
     title: Compact Language Models via Pruning and Knowledge Distillation
+  - id: wangLeverSpeculativeLLM2026a
+    resource: zotero://select/items/@wangLeverSpeculativeLLM2026a
+    title: "Lever: Speculative LLM Inference on Smartphones"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: huAdaSPECSelectiveKnowledge2025
+    resource: zotero://select/items/@huAdaSPECSelectiveKnowledge2025
+    title: "AdaSPEC: Selective Knowledge Distillation for Efficient Speculative Decoders"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # MBPP
 
 ## Overview
 
-MBPP, like [HumanEval](humaneval.md), measures function body generation accuracy given natural language descriptions.[^shinnReflexionLanguageAgents2023] Three speculative-decoding papers use its prompts as a code workload for measuring speedup and acceptance length.[^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026] Two papers report pass@1 accuracy on it.[^shinnReflexionLanguageAgents2023][^muralidharanCompactLanguageModels2024]
+MBPP, like [HumanEval](humaneval.md), measures function body generation accuracy given natural language descriptions.[^shinnReflexionLanguageAgents2023] Three speculative-decoding papers use its prompts as a code workload for measuring speedup and acceptance length.[^chenDFlashBlockDiffusion2026][^chengDSparkConfidenceScheduledSpeculative2026][^liuWhenParallelDrafter2026] Two papers report pass@1 accuracy on it.[^shinnReflexionLanguageAgents2023][^muralidharanCompactLanguageModels2024] LayerSkip and I-DLM also report its accuracy, for early exit layers and for a diffusion LM against its AR base.[^elhoushiLayerSkipEnablingEarly2024][^yuIntrospectiveDiffusionLanguage2026] AdaSPEC uses it as a task for distilling draft models and measuring their acceptance rate.[^huAdaSPECSelectiveKnowledge2025]
 
 ## Composition
 
@@ -41,6 +53,10 @@ MBPP, like [HumanEval](humaneval.md), measures function body generation accuracy
 | [DPara](../papers/liuWhenParallelDrafter2026.md) | Coding prompt set for speedup and $\tau$ | Qwen3-8B and 14B; greedy and temperature 1.0 | DPara on Qwen3-8B, greedy: 3.27×, $\tau$ 4.48[^liuWhenParallelDrafter2026] |
 | [Reflexion](../papers/shinnReflexionLanguageAgents2023.md) | Pass@1 accuracy, Python and Rust | GPT-4 baseline and Reflexion | Reflexion 77.1 on MBPP (PY) against 80.1 for GPT-4, and 75.4 on MBPP (RS) against 70.9[^shinnReflexionLanguageAgents2023] |
 | [Minitron](../papers/muralidharanCompactLanguageModels2024.md) | Zero-shot pass@1 of pruned and baseline models | Minitron 8B and 4B and baselines; temperature 0.2, top-p 0.95 | Minitron 8B 35.2, Minitron 4B 28.2[^muralidharanCompactLanguageModels2024] |
+| [Lever](../papers/wangLeverSpeculativeLLM2026a.md) | Decoding workload, 50 samples, up to 128 output tokens; also the sensitivity studies | Four targets on three Snapdragon phones, greedy | Lever on Qwen3-4B, Honor Magic V5: 7.55 tokens/s[^wangLeverSpeculativeLLM2026a] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | Early exit accuracy at the last and middle layer, baseline → LayerSkip | Llama2 7B/13B, Llama3 8B, Llama3.2 1B, continual pretraining | Llama2 7B last layer 21.0 → 22.4, middle layer 0 → 7.20; Llama3 8B last layer 49.0 → 40.0[^elhoushiLayerSkipEnablingEarly2024] |
+| [Hu et al. 2025](../papers/huAdaSPECSelectiveKnowledge2025.md) | Code task for [AdaSPEC](../methods/adaspec.md) draft distillation; acceptance rate; ablations; vLLM speed | Pythia-31M → 1.4B and CodeGen-350M → Phi-2, greedy verification | $\alpha$ 49.88% (DistillSpec) → 65.12% (Pythia, optimal epochs); 149.15 → 181.67 tokens/s on one A100[^huAdaSPECSelectiveKnowledge2025] |
+| [Yu et al. 2026](../papers/yuIntrospectiveDiffusionLanguage2026.md) | Accuracy of [I-DLM](../methods/i-dlm.md); serving workload against EAGLE-3 | Qwen3 chat template with thinking, temperature 1.0, three runs; sanitized, 257 problems, pass@1 | I-DLM-8B 92.2 vs Qwen3-8B 93.4; 327 vs 245 tokens/s per request against EAGLE-3 at concurrency 1[^yuIntrospectiveDiffusionLanguage2026] |
 
 ## Speed metrics
 
@@ -215,3 +231,7 @@ The settings differ in ways that the papers state. The DFlash paper runs the Tra
 [^chengDSparkConfidenceScheduledSpeculative2026]: Cheng et al. 2026
 [^liuWhenParallelDrafter2026]: Liu et al. 2026
 [^muralidharanCompactLanguageModels2024]: Muralidharan et al. 2024
+[^wangLeverSpeculativeLLM2026a]: Wang et al. 2026
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^huAdaSPECSelectiveKnowledge2025]: Hu et al. 2025
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

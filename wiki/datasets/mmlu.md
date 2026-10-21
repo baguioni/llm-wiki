@@ -25,13 +25,22 @@ sources:
   - id: zhengSGLangEfficientExecution2024
     resource: zotero://select/items/@zhengSGLangEfficientExecution2024
     title: "SGLang: Efficient Execution of Structured Language Model Programs"
+  - id: agarwalOnPolicyDistillationLanguage2024
+    resource: zotero://select/items/@agarwalOnPolicyDistillationLanguage2024
+    title: "On-Policy Distillation of Language Models: Learning from Self-Generated Mistakes"
+  - id: elhoushiLayerSkipEnablingEarly2024
+    resource: zotero://select/items/@elhoushiLayerSkipEnablingEarly2024
+    title: "LayerSkip: Enabling Early Exit Inference and Self-Speculative Decoding"
+  - id: yuIntrospectiveDiffusionLanguage2026
+    resource: zotero://select/items/@yuIntrospectiveDiffusionLanguage2026
+    title: "Introspective Diffusion Language Models"
 ---
 
 # MMLU
 
 ## Overview
 
-The wiki's papers use MMLU in two ways. Four papers report task accuracy on it: as a world-knowledge task among the Open LLM Leaderboard tasks,[^xiaShearedLLaMAAccelerating2024] as a downstream task for compressed models,[^muralidharanCompactLanguageModels2024] as the general reasoning task for multi-agent systems,[^wangAgentDropoutDynamicAgent2025] and as an out-of-domain check after domain-specific training.[^weiSWERLAdvancingLLM2025] Three papers use its questions only as prompts or as a workload for speed measurements, and report no accuracy.[^yanDecodingSpeculativeDecoding2025][^zhangLearningDraftAdaptive2026][^zhengSGLangEfficientExecution2024]
+The wiki's papers use MMLU in two ways. Seven papers report task accuracy on it: as a world-knowledge task among the Open LLM Leaderboard tasks,[^xiaShearedLLaMAAccelerating2024] as a downstream task for compressed models,[^muralidharanCompactLanguageModels2024] as the general reasoning task for multi-agent systems,[^wangAgentDropoutDynamicAgent2025] as an out-of-domain check after domain-specific training,[^weiSWERLAdvancingLLM2025] as a held-out test of task-agnostic distillation,[^agarwalOnPolicyDistillationLanguage2024] as an early-exit accuracy test,[^elhoushiLayerSkipEnablingEarly2024] and as a quality test for a diffusion LM converted from an AR model.[^yuIntrospectiveDiffusionLanguage2026] Three papers use its questions only as prompts or as a workload for speed measurements, and report no accuracy.[^yanDecodingSpeculativeDecoding2025][^zhangLearningDraftAdaptive2026][^zhengSGLangEfficientExecution2024]
 
 ## Composition
 
@@ -50,6 +59,9 @@ The wiki's papers use MMLU in two ways. Four papers report task accuracy on it: 
 | [Yan et al. 2025](../papers/yanDecodingSpeculativeDecoding2025.md) | Prompts for [speculative decoding](../methods/speculative-decoding.md) throughput | Standard 5-shot, open-ended generation | See the speed table[^yanDecodingSpeculativeDecoding2025] |
 | [Zhang et al. 2026](../papers/zhangLearningDraftAdaptive2026.md) | Cross-domain generalization of speedup | Llama-3.1-8B-Instruct, 80 sampled examples per subtask | See the speed table[^zhangLearningDraftAdaptive2026] |
 | [Zheng et al. 2024](../papers/zhengSGLangEfficientExecution2024.md) | Serving workload for [SGLang](../methods/sglang.md) | 5-shot, one decoded token | Only normalized bar charts[^zhengSGLangEfficientExecution2024] |
+| [Agarwal et al. 2024](../papers/agarwalOnPolicyDistillationLanguage2024.md) | Held-out test of task-agnostic [GKD](../methods/gkd.md) on FLAN2021 | FLAN T5-XL teacher, FLAN T5-Base student, few-shot exact match | Teacher 52.4%, student 35.6% (the caption calls the student T5-large, the setup T5-Base); on-policy GKD gives 1% absolute improvement[^agarwalOnPolicyDistillationLanguage2024] |
+| [Elhoushi et al. 2024](../papers/elhoushiLayerSkipEnablingEarly2024.md) | Early exit accuracy at the last and middle layer, baseline → LayerSkip | Llama2 7B/13B, Llama3 8B, Llama3.2 1B, continual pretraining | Llama2 13B last layer 55.2 → 53.7, middle layer 49.2 → 52.9; Llama3 8B last layer 66.5 → 60.5[^elhoushiLayerSkipEnablingEarly2024] |
+| [Yu et al. 2026](../papers/yuIntrospectiveDiffusionLanguage2026.md) | Accuracy of [I-DLM](../methods/i-dlm.md) against its AR base | Qwen3 chat template with thinking, temperature 1.0, three runs; 14,042 problems | I-DLM-8B 82.4 vs Qwen3-8B 83.5; I-DLM-32B 86.8 vs 87.2[^yuIntrospectiveDiffusionLanguage2026] |
 
 ### Protocols
 
@@ -236,3 +248,6 @@ These rows measure decoding speed with MMLU questions as prompts. They are not a
 [^yanDecodingSpeculativeDecoding2025]: Yan et al. 2025
 [^zhangLearningDraftAdaptive2026]: Zhang et al. 2026
 [^zhengSGLangEfficientExecution2024]: Zheng et al. 2024
+[^agarwalOnPolicyDistillationLanguage2024]: Agarwal et al. 2024
+[^elhoushiLayerSkipEnablingEarly2024]: Elhoushi et al. 2024
+[^yuIntrospectiveDiffusionLanguage2026]: Yu et al. 2026

@@ -245,4 +245,10 @@ All rows: [^xiaShearedLLaMAAccelerating2024]
 - Methods compared against: [CoFiPruning](../methods/cofi-pruning.md), [LLM-Pruner](../methods/llm-pruner.md), [Wanda](../methods/wanda.md)
 - Datasets: [RedPajama](../datasets/redpajama.md), [ShareGPT](../datasets/sharegpt.md), [MMLU](../datasets/mmlu.md), [HellaSwag](../datasets/hellaswag.md), [GSM8K](../datasets/gsm8k.md), [HumanEval](../datasets/humaneval.md)
 
+## Open questions and results
+
+- [Training budgets for pruning recovery and drafter distillation](../analyses/recovery-and-distillation-training-budgets.md)
+- [Applying the speculative drafter papers to a mobile phone NPU](../analyses/speculative-drafter-papers-on-mobile-npu.md)
+- [Does speculative decoding help on a mobile NPU?](../questions/speculative-decoding-on-mobile-npu.md)
+
 [^xiaShearedLLaMAAccelerating2024]: Xia et al. 2024
